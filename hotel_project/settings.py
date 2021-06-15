@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fk1q^!6y381pq+a#+#-$c=x6=&yu2-v*)q*8o943#67vzfpe+&'
+from hotel_project.local_settings import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
