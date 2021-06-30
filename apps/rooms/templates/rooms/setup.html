@@ -4,96 +4,34 @@
 {% block page_name %}Hotel Setup{% endblock %}
 
 {% block content %}
-<div class="row">
-	<div class="col-sm-6">
-		<div class="card">
-			<div class="card-header bg-primary text-white">
-				Floors
-			</div>
-			<div class="card-body">
-				{% if floor_list %}
-					<table class="table table-sm">
-						<thead>
-							<tr>
-								<th>&nbsp;</th>
-								<th>Floor Number</th>
-								<th>Rooms</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for floor in floor_list %}
-								<tr>
-									<td><a href="#" class="btn btn-primary btn-sm">View</a></td>
-									<td>{{floor.number}}</td>
-									<td>{{floor.room_set.count}}</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				{% else %}
-					<div>No floors setup</div>
-				{% endif %}
-			</div>
-			<div class="card-footer">
-				<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-floor-modal">Add Floor</button>
-			</div>
-		</div>
-	</div>
+<div class="row" id="app">
+	<ul>
+		<li v-for="floor in floors" :key="floor.id">
+			${floor.number} - ${floor.rooms}
+		</li>
+	</ul>
 </div>
-
-<div class="modal fade" id="add-floor-modal" tabindex="-1" aria-labelledby="add-floor-modal-label" aria-hidden="true">
- 	<div class="modal-dialog">
-    	<div class="modal-content">
-      		<div class="modal-header">
-        		<h5 class="modal-title" id="add-floor-modal-label">Add Floor</h5>
-        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      		</div>
-      		<div class="modal-body">
-        		<div>
-        			<div class="col-auto">
-        				<label class="form-label">Floor Number:</label>
-        				<input type="number" name="floor-number" id="floor-number" />
-        			</div>
-        			<div class="col-auto error" id="add-floor-error">
-
-        			</div>
-        		</div>
-      		</div>
-      		<div class="modal-footer">
-        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        		<button type="button" class="btn btn-primary" id="add-floor-save-button">Add</button>
-      		</div>
-    	</div>
-  	</div>
-</div>
-
 {% endblock %}
 
 {% block page_scripts %}
 <script src="{% static 'js/ajax.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
 <script>
-	const csrf_token = "{{csrf_token}}";
-	
-	const addFloorButton = document.getElementById('add-floor-save-button');
+	const app = Vue.createApp({
+		data() {
+			return {
+				floors: [
+					{id: 1, number: "1", rooms: 25},
+					{id: 2, number: "2", rooms: 35},
+				]
+			}
+		},
+		compilerOptions: {
+    		delimiters: ['${', '}'],
+    	}
+	});
 
-	addFloorButton.addEventListener("click", (e) => {
-		addNewFloor();
-	})
-
-	async function addNewFloor() {
-		const new_floor_number = document.getElementById("floor-number").value;
-		if (new_floor_number == "") {
-			return;
-		}
-		let url = "{% url 'ajax-rooms-create-floor' %}";
-		let response = await postData(url, csrf_token, {"floor-number": new_floor_number});
-		if (response.result == "success") {
-			window.location.reload(true);
-		} else {
-			document.getElementById("add-floor-error").innerHTML = response.message;
-		}
-	}
-
+	app.mount("#app");
 </script>
 {% endblock %}
 
