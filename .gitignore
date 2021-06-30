@@ -1,6 +1,6 @@
 # Specify filepatterns you want git to ignore.
 
-.env/
+.pyv/
 *.pyc
 db.sqlite3
 hotel_project/local_settings.py
