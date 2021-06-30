@@ -1,0 +1,47 @@
+{% extends "dashboard-base.html" %}
+
+{% block content %}
+<div class="row">
+	<h1>Hotel Setup</h1>
+	<div class="col-sm-6">
+		<div class="card">
+			<div class="card-header bg-primary text-white">
+				Floors
+			</div>
+			<div class="card-body">
+				{% if floor_list %}
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th>&nbsp;</th>
+								<th>Floor Number</th>
+								<th>Rooms</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for floor in floor_list %}
+								<tr>
+									<td><a href="#" class="btn btn-primary btn-sm">View</a></td>
+									<td>{{floor.number}}</td>
+									<td>{{floor.room_set.count}}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<div>No floors setup</div>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				<button class="btn btn-primary btn-sm">Add Floor</button>
+			</div>
+		</div>
+	</div>
+</div>	
+{% endblock %}
+
+{% block page_scripts %}
+{% endblock %}
+
+{% block page_styles %}
+{% endblock %}
