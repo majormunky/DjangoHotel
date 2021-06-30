@@ -33,11 +33,35 @@
 				{% endif %}
 			</div>
 			<div class="card-footer">
-				<button class="btn btn-primary btn-sm">Add Floor</button>
+				<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-floor-modal">Add Floor</button>
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
+
+<div class="modal fade" id="add-floor-modal" tabindex="-1" aria-labelledby="add-floor-modal-label" aria-hidden="true">
+ 	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="add-floor-modal-label">Add Floor</h5>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      		</div>
+      		<div class="modal-body">
+        		<div>
+        			<div class="col-auto">
+        				<label class="form-label">Floor Number:</label>
+        				<input type="number" name="floor-number" id="floor-number" />
+        			</div>
+        		</div>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        		<button type="button" class="btn btn-primary">Save</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
 {% endblock %}
 
 {% block page_scripts %}
