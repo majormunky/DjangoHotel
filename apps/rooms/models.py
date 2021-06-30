@@ -28,6 +28,7 @@ class Room(models.Model):
 	number = models.CharField(max_length=6)
 	floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
 	bed_count = models.IntegerField()
+	beds = models.ManyToManyField("Bed")
 
 	def __str__(self):
 		return "{}: {}".format(self.floor.number, self.number)
