@@ -7,16 +7,11 @@ async function postData(url, csrf, data) {
 
     const response = await fetch(url, {
         method: 'POST',
-        mode: 'same-origin',
-        cache: 'no-cache',
-        credentials: 'same-origin',
         headers: {
-            // 'Content-Type': 'application/json'
-            'Content-Type': 'application/x-www-form-urlencoded',
             'X-CSRFToken': csrf,
+            'X-Requested-With': 'XMLHttpRequest',
         },
-        redirect: 'follow',
         body: formData
     });
-    return response.json(); // parses JSON response into native JavaScript objects
+    return response.json();
 }

@@ -54,6 +54,9 @@
         				<label class="form-label">Floor Number:</label>
         				<input type="number" name="floor-number" id="floor-number" />
         			</div>
+        			<div class="col-auto error" id="add-floor-error">
+
+        			</div>
         		</div>
       		</div>
       		<div class="modal-footer">
@@ -78,9 +81,17 @@
 	})
 
 	async function addNewFloor() {
+		const new_floor_number = document.getElementById("floor-number").value;
+		if (new_floor_number == "") {
+			return;
+		}
 		let url = "{% url 'ajax-rooms-create-floor' %}";
-		let response = await postData(url, csrf_token, {"test": "value"});
-		console.log(response);
+		let response = await postData(url, csrf_token, {"floor-number": new_floor_number});
+		if (response.result == "success") {
+			window.location.reload(true);
+		} else {
+			document.getElementById("add-floor-error").innerHTML = response.message;
+		}
 	}
 
 </script>
