@@ -5,11 +5,33 @@
 
 {% block content %}
 <div class="row" id="app">
-	<ul>
-		<li v-for="floor in floors" :key="floor.id">
-			${floor.number} - ${floor.rooms}
-		</li>
-	</ul>
+	<div class="card">
+		<div class="card-header text-white bg-primary">
+			Floors
+		</div>
+		<div class="card-body">
+			<table class="table table-sm">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>Floor</th>
+						<th>Rooms</th>
+					</tr>
+				</thead>
+				<tbody class="align-middle">
+					<tr v-for="floor in floors" :key="floor.id">
+						<td><a href="#" @click="onViewFloorClicked" class="btn btn-primary btn-sm">View</a></td>
+						<td>${floor.number}</td>
+						<td>${floor.rooms}</td>
+					</tr>
+				</tbody>
+			</table>		
+		</div>
+		<div class="card-footer">
+			<button class="btn btn-primary btn-sm" @click='addFloorClicked'>Add Floor</button>
+		</div>
+	</div>
+	
 </div>
 {% endblock %}
 
@@ -17,17 +39,29 @@
 <script src="{% static 'js/ajax.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
 <script>
+	const floor_url = "{% url 'api-floor-list' %}";
 	const app = Vue.createApp({
 		data() {
 			return {
-				floors: [
-					{id: 1, number: "1", rooms: 25},
-					{id: 2, number: "2", rooms: 35},
-				]
+				floors: []
+			}
+		},
+		async mounted() {
+			let response = await getData(floor_url);
+			if (response.length) {
+				this.floors = response;
 			}
 		},
 		compilerOptions: {
     		delimiters: ['${', '}'],
+    	},
+    	methods: {
+    		addFloorClicked() {
+    			console.log("Add Floor Clicked")
+    		},
+    		onViewFloorClicked() {
+    			console.log("View Floor Clicked")
+    		}
     	}
 	});
 
