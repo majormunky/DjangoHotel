@@ -12,7 +12,7 @@ class Floor(models.Model):
 	number = models.IntegerField()
 
 	def __str__(self):
-		return self.name
+		return str(self.number)
 
 
 class Room(models.Model):
