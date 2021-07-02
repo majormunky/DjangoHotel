@@ -3,8 +3,8 @@ from . import views
 
 
 urlpatterns = [
-	path('', views.index, name='rooms-index'),
-	path('setup/', views.setup, name='rooms-setup'),
-	path('ajax/create-floor/', views.ajax_create_floor, name='ajax-rooms-create-floor'),
-	path('api/', include('rooms.api.urls')),
+	path('dashboard/', views.index, name='dashboard-index'),
+	path('dashboard/setup/', views.setup, name='rooms-setup'),
+	path('dashboard/ajax/create-floor/', views.ajax_create_floor, name='ajax-rooms-create-floor'),
+	path('rooms/api/', include('rooms.api.urls')),
 ]
