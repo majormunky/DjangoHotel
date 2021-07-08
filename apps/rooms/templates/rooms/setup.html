@@ -5,33 +5,34 @@
 
 {% block content %}
 <div class="row" id="app">
-	<div class="card">
-		<div class="card-header text-white bg-primary">
-			Floors
-		</div>
-		<div class="card-body">
-			<table class="table table-sm">
-				<thead>
-					<tr>
-						<th>&nbsp;</th>
-						<th>Floor</th>
-						<th>Rooms</th>
-					</tr>
-				</thead>
-				<tbody class="align-middle">
-					<tr v-for="floor in floors" :key="floor.id">
-						<td><a href="#" @click="onViewFloorClicked" class="btn btn-primary btn-sm">View</a></td>
-						<td>${floor.number}</td>
-						<td>${floor.rooms}</td>
-					</tr>
-				</tbody>
-			</table>		
-		</div>
-		<div class="card-footer">
-			<button class="btn btn-primary btn-sm" @click='addFloorClicked'>Add Floor</button>
-		</div>
+	<div class="col-12">
+		<div class="card">
+			<div class="card-header text-white bg-primary">
+				Floors
+			</div>
+			<div class="card-body">
+				<table class="table table-sm">
+					<thead>
+						<tr>
+							<th>&nbsp;</th>
+							<th>Floor</th>
+							<th>Rooms</th>
+						</tr>
+					</thead>
+					<tbody class="align-middle">
+						<tr v-for="floor in floors" :key="floor.id">
+							<td><a href="#" @click="onViewFloorClicked" class="btn btn-primary btn-sm">View</a></td>
+							<td>${floor.number}</td>
+							<td>${floor.rooms}</td>
+						</tr>
+					</tbody>
+				</table>		
+			</div>
+			<div class="card-footer">
+				<button class="btn btn-primary btn-sm" @click='addFloorClicked'>Add Floor</button>
+			</div>
+		</div>	
 	</div>
-	
 </div>
 {% endblock %}
 
