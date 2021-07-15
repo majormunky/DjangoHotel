@@ -1,7 +1,25 @@
 {% extends "base.html" %}
 
+{% block container_class %}container{% endblock %}
+
 {% block content %}
-<h1>Book Room</h1>
+<div class="row mt-3">
+    <div class="col-lg-6 col-sm-12">
+        <h1>Book Room</h1>
+        <form action="." method="POST">
+            <div class="mb-3">
+                <label class="form-label">Start Date:</label>
+                <input type="date" name="start-date" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">End Date:</label>
+                <input type="date" name="end-date" class="form-control">
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit">Book Room</button>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block page_scripts %}

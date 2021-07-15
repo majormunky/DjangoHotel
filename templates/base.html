@@ -43,7 +43,7 @@
             </div>
         </div>
     </nav>
-    <div class="container-fluid">
+    <div class="{% block container_class %}container-fluid{% endblock %}">
         {% block content %}{% endblock %}
     </div>
     
