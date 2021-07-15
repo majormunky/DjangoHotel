@@ -2,52 +2,59 @@ from django.db import models
 
 
 class Floor(models.Model):
-	"""
-	Floor represents a hotel floor.
+    """
+    Floor represents a hotel floor.
 
-	number: The floor number of the hotel
+    number: The floor number of the hotel
 
-	"""
+    """
 
-	number = models.IntegerField()
+    number = models.IntegerField()
 
-	def __str__(self):
-		return str(self.number)
+    def __str__(self):
+        return str(self.number)
 
 
 class Room(models.Model):
-	"""
-	Room represents a hotel room.
+    """
+    Room represents a hotel room.
 
-	number: The room number
-	floor: The floor the room is on
-	bed_count: How many beds this room has
+    number: The room number
+    floor: The floor the room is on
+    bed_count: How many beds this room has
 
-	"""
+    """
 
-	number = models.CharField(max_length=6)
-	floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
-	bed_count = models.IntegerField()
-	beds = models.ManyToManyField("Bed")
+    SIZE_CHOICES = (
+        ("small", "Small"),
+        ("medium", "Medium"),
+        ("large", "Large"),
+    )
 
-	def __str__(self):
-		return "{}: {}".format(self.floor.number, self.number)
+    number = models.CharField(max_length=6)
+    floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
+    bed_count = models.IntegerField()
+    beds = models.ManyToManyField("Bed")
+    size = models.CharField(max_length=20, choices=SIZE_CHOICES)
+
+    def __str__(self):
+        return "{}: {}".format(self.floor.number, self.number)
 
 
 class Bed(models.Model):
-	"""
-	Bed reprensents a bed type that would be in a room.
+    """
+    Bed reprensents a bed type that would be in a room.
 
-	name: Description of the bed
-	"""
+    name: Description of the bed
+    """
 
-	bed_choices = (
-		('single', 'Single'),
-		('twin', 'Twin'),
-		('queen', 'Queen'),
-		('king', 'King'),
-	)
-	name = models.CharField(max_length=64, choices=bed_choices)
+    bed_choices = (
+        ("single", "Single"),
+        ("twin", "Twin"),
+        ("queen", "Queen"),
+        ("king", "King"),
+    )
+    name = models.CharField(max_length=64, choices=bed_choices)
 
-	def __str__(self):
-		return self.get_name_display()
+    def __str__(self):
+        return self.get_name_display()
