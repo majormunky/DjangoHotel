@@ -52,22 +52,95 @@
     </head>
     <body class="text-center">
         <main class="form-signin">
-            <form action="." method="POST">
-                {% csrf_token %}
-                <h1>Django Hotel</h1>
-                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <ul class="nav nav-tabs nav-fill mb-3">
+                <li class="nav-item">
+                    <a class="nav-link active" data-form-id="#login-form" aria-current="page" href="#">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-form-id="#register-form" href="#">Register</a>
+                </li>
+            </ul>
+            <div id="login-form">
+                <form action="." method="POST">
+                    {% csrf_token %}
+                    <h1>Django Hotel</h1>
+                    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-                <div class="form-floating">
-                    <input type="email" class="form-control" name="username" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email address</label>
-                </div>
-                <div class="form-floating">
-                    <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-                <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
-            </form>
+                    <div class="form-floating">
+                        <input type="email" class="form-control" name="username" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                    <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
+                </form>
+            </div>
+            <div id="register-form" style="display: none;">
+                <form action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+                    <h1>Django Hotel</h1>
+                    <h1 class="h3 mb-3 fw-normal">Register</h1>
+
+                    <div class="form-floating">
+                        <input type="first_name" class="form-control" name="first_name" id="floatingInput" placeholder="Terry">
+                        <label for="floatingInput">First Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="last_name" class="form-control" name="last_name" id="floatingInput" placeholder="Smith">
+                        <label for="floatingInput">Last Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="email" class="form-control" name="email" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password1" id="floatingPassword" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password2" id="floatingPassword" placeholder="Confirm Password">
+                        <label for="floatingPassword">Confirm Password</label>
+                    </div>
+                    <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">Register</button>
+                    <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
+                </form>
+            </div>
         </main>
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script>
+            const loginFormEl = document.getElementById("login-form");
+            const registerFormEl = document.getElementById("register-form");
+            
+            document.querySelectorAll(".nav-link").forEach((el) => {
+                el.addEventListener("click", (event) => {
+                    document.querySelector(".nav-link.active")?.classList.remove("active");
+                    el.classList.add("active");
+                    
+                    const formId = event.target.dataset.formId;
+                    console.log(formId);
+                    if (formId == "#register-form") {
+                        console.log("in register form")
+                        loginFormEl.style.display = "none";
+                        registerFormEl.style.display = "block";
+                    } else if (formId == "#login-form") {
+                        console.log("in login form")
+                        loginFormEl.style.display = "block";
+                        registerFormEl.style.display = "none";
+                    }
+                })
+            })
+        </script>
     </body>
 </html>
