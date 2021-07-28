@@ -8,7 +8,7 @@ class Booking(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     is_active = models.BooleanField()
-    check_in_time = models.DateTimeField()
+    check_in_time = models.DateTimeField(blank=True, null=True)
     room = models.OneToOneField(
         "rooms.Room", on_delete=models.CASCADE, blank=True, null=True
     )
