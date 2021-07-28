@@ -2,6 +2,7 @@ import datetime
 from django.shortcuts import render
 from django.http import JsonResponse
 from rooms import models as room_models
+from . import utils
 
 
 def book_room(request):
@@ -21,7 +22,7 @@ def ajax_check_booking(request):
     end_date_obj = datetime.datetime.strptime(end_date, "%Y-%m-%d")
 
     # simple but probably slow way to find an available room
-    room_list = room_models.Room.objects.filter(booking__isnull=True)
+    room_list = utils.check_bookings_with_date_range(start_date_obj, end_date_obj)
 
     print(room_list)
 
