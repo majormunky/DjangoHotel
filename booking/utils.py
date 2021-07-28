@@ -22,7 +22,7 @@ def check_bookings_with_date_range(start, end):
             # this room does have some bookings in the future, loop over them
             for scheduled_booking in room.scheduled_booking.all():
                 # check to see if our input range falls within the scheduled booking range
-                if not (
+                if (
                     end <= scheduled_booking.start_date.date()
                     or start >= scheduled_booking.end_date.date()
                 ):
