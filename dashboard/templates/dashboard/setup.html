@@ -1,0 +1,85 @@
+{% extends "dashboard-base.html" %}
+{% load static %}
+
+{% block page_name %}Setup{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                Room List
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Floor #</th>
+                            <th>Rooms</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        {% for floor in floor_list %}
+                            <tr>
+                                <td><button data-floor-id="{{floor.id}}" class="btn btn-primary btn-sm view-floor">View</a></td>
+                                <td>{{floor.number}}</td>
+                                <td>x</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                Rooms (Floor: <span id="room-number-display"></span>)
+            </div>
+            <div class="card-body">
+                <div id="room-list-for-floor">Please select a floor</div>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
+<script>
+    document.querySelectorAll(".view-floor").forEach((el) => {
+        el.addEventListener("click", async (event) => {
+            const floorNum = event.target.dataset.floorId;
+
+            document.getElementById("room-number-display").innerHTML = floorNum;
+
+            const url = `{% url 'api-rooms-for-floor' %}?floor_num=${floorNum}`;
+            const response = await getData(url);
+            const wrapper = document.getElementById("room-list-for-floor");
+            if (response.length) {
+                wrapper.innerHTML = "";
+
+                let output = "<table class='table'>";
+                output += "<tr><th>Room #</th><th>Beds</th><th>Size</th></tr>";
+                for (let item of response) {
+                    output += "<tr>";
+                    output += `<td>Room: ${item.number}</td>`;
+                    output += `<td>${item.bed_count}</td>`;
+                    output += `<td>${item.size}</td>`;
+                    output += "</tr>";
+                }
+                output += "</table>";
+                wrapper.innerHTML = output;
+            } else {
+                wrapper.innerHTML = "This floor has no rooms setup";
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block page_styles %}
+{% endblock %}
