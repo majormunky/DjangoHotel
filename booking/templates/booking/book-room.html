@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block container_class %}container{% endblock %}
 
@@ -6,16 +7,16 @@
 <div class="row mt-3">
     <div class="col-lg-6 col-sm-12">
         <h1>Book Room</h1>
-        <form action="." method="POST">
+        <form>
             <div class="mb-3">
                 <label class="form-label">Start Date:</label>
-                <input type="date" name="start-date" class="form-control">
+                <input type="date" name="start-date" id="start-date" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">End Date:</label>
-                <input type="date" name="end-date" class="form-control">
+                <input type="date" name="end-date" id="end-date" class="form-control">
             </div>
-            <button class="btn btn-primary btn-sm" type="submit">Book Room</button>
+            <button class="btn btn-primary btn-sm" type="button" id="book-room">Book Room</button>
         </form>
     </div>
 </div>
@@ -23,6 +24,24 @@
 {% endblock %}
 
 {% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
+<script>
+    const csrfToken = "{{csrf_token}}";
+    document.getElementById("book-room").addEventListener("click", async (event) => {
+        const startDate = document.getElementById("start-date").value;
+        const endDate = document.getElementById("end-date").value;
+
+        const data = {
+            "start": startDate,
+            "end": endDate
+        }
+
+        const postUrl = "{% url 'ajax-check-booking' %}";
+
+        const response = await postData(postUrl, csrfToken, data);
+        console.log(response);
+    });
+</script>
 {% endblock %}
 
 {% block page_styles %}
