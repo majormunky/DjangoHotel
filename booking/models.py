@@ -13,4 +13,11 @@ class Booking(models.Model):
     room = models.OneToOneField(
         "rooms.Room", on_delete=models.CASCADE, blank=True, null=True
     )
+    scheduled_room = models.ForeignKey(
+        "rooms.Room",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="scheduled_room",
+    )
     created_at = models.DateTimeField(default=timezone.now)
