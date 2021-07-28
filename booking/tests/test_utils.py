@@ -23,7 +23,7 @@ def booking_list():
     tz = pytz.timezone("US/Pacific")
     b1_start_date = datetime.datetime(2021, 8, 1, 17, 0, 0).astimezone(tz)
     b1_end_date = datetime.datetime(2021, 8, 10, 11, 0, 0).astimezone(tz)
-    room1 = mixer.blend(room_models.Room)
+    room1 = mixer.blend(room_models.Room, number="1")
     room1.save()
     booking1 = mixer.blend(
         models.Booking,
@@ -35,7 +35,7 @@ def booking_list():
 
     b2_start_date = datetime.datetime(2021, 8, 4, 17, 0, 0).astimezone(tz)
     b2_end_date = datetime.datetime(2021, 8, 15, 11, 0, 0).astimezone(tz)
-    room2 = mixer.blend(room_models.Room)
+    room2 = mixer.blend(room_models.Room, number="2")
     room2.save()
     booking2 = mixer.blend(
         models.Booking,
@@ -45,7 +45,7 @@ def booking_list():
     )
     booking2.save()
 
-    room3 = mixer.blend(room_models.Room)
+    room3 = mixer.blend(room_models.Room, number="3")
     room3.save()
 
     return models.Booking.objects.all()
