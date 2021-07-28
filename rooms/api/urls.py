@@ -3,5 +3,6 @@ from rooms.api import views
 from rooms.api import serializers
 
 urlpatterns = [
-    path('floors/', views.ListFloors.as_view(), name='api-floor-list'),
+    path("floors/", views.ListFloors.as_view(), name="api-floor-list"),
+    path("rooms/", views.RoomsForFloorAPIView.as_view(), name="api-rooms-for-floor"),
 ]
