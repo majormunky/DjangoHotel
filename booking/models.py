@@ -9,5 +9,5 @@ class Booking(models.Model):
     end_date = models.DateTimeField()
     is_active = models.BooleanField()
     check_in_time = models.DateTimeField()
-    room = models.ForeignKey("rooms.Room", on_delete=models.CASCADE)
+    room = models.OneToOneField("rooms.Room", on_delete=models.CASCADE)
     created_at = models.DateTimeField()
