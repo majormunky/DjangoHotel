@@ -9,6 +9,17 @@ from booking import utils
 
 @pytest.fixture
 def booking_list():
+    """
+    This creates a booking situation where we have 2 rooms booked
+    and a third room that has no bookings setup
+    The 2 rooms that are booked have a staggered range of dates booked
+
+    August 2021
+    1...5....10...15...20...25...30
+    |--------|                      Room 1
+       |----------|                 Room 2
+                                    Room 3
+    """
     tz = pytz.timezone("US/Pacific")
     b1_start_date = datetime.datetime(2021, 8, 1, 17, 0, 0).astimezone(tz)
     b1_end_date = datetime.datetime(2021, 8, 10, 11, 0, 0).astimezone(tz)
