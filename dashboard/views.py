@@ -9,3 +9,7 @@ def index(request):
 def setup(request):
     floor_list = floor_models.Floor.objects.all()
     return render(request, "dashboard/setup.html", {"floor_list": floor_list})
+
+
+def booking(request):
+    return render(request, "dashboard/booking.html", {})

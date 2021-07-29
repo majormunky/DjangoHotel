@@ -45,6 +45,12 @@
               						Setup
             					</a>
           					</li>
+          					<li class="nav-item">
+            					<a class="nav-link {% if request.path == '/dashboard/booking/' %}active{% endif %}" href="{% url 'dashboard-booking' %}">
+              						<span data-feather="file"></span>
+              						Bookings
+            					</a>
+          					</li>
         				</ul>
         			</div>
     			</nav>
