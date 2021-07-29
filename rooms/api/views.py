@@ -1,4 +1,6 @@
+from django.contrib import messages
 from rest_framework.views import APIView
+from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -49,5 +51,10 @@ class GenerateRoomsForFloorAPIView(APIView):
                     rooms_created += 1
                 else:
                     print("found existing room", room_obj)
+            messages.add_message(
+                request,
+                messages.INFO,
+                "Created {} floors successfully".format(rooms_created),
+            )
             return Response({"result": "success", "floors_created": rooms_created})
         return Response({"result": "failed", "message": "Unable to find floor object"})

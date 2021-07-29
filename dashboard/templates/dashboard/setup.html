@@ -4,6 +4,18 @@
 {% block page_name %}Setup{% endblock %}
 
 {% block content %}
+{% if messages %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% for message in messages %}
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
 <div class="row">
     <div class="col-sm-6">
         <div class="card">
@@ -51,7 +63,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="generate-rooms-modal-label">Modal title</h5>
+                <h5 class="modal-title" id="generate-rooms-modal-label">Generate Rooms</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -106,6 +118,10 @@
         });
     });
 
+    document.addEventListener("shown.bs.modal", () => {
+        document.getElementById("room-count").focus();
+    });
+
     document.getElementById("generate-floor-confirm-button").addEventListener("click", async (event) => {
         const roomCount = parseInt(document.getElementById("room-count").value, 10);
         const data = {
@@ -120,7 +136,7 @@
         } else {
             document.getElementById("generate-errors").innerHTML = response.message;
         }
-    })
+    });
 </script>
 {% endblock %}
 
