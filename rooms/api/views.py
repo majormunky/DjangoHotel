@@ -1,5 +1,6 @@
 from django.contrib import messages
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -58,3 +59,21 @@ class GenerateRoomsForFloorAPIView(APIView):
             )
             return Response({"result": "success", "floors_created": rooms_created})
         return Response({"result": "failed", "message": "Unable to find floor object"})
+
+
+class CreateFloorAPIView(CreateAPIView):
+    def post(self, request, format=None):
+        floor_num = request.POST.get("floor_num", None)
+        existing_floor = models.Floor.objects.filter(number=floor_num)
+        if existing_floor:
+            return Response(
+                {
+                    "result": "failed",
+                    "message": "There already exists a floor with that number",
+                }
+            )
+
+        new_floor = models.Floor(number=floor_num)
+        new_floor.save()
+        json_data = serializers.FloorSerializer(new_floor).data
+        return Response({"result": "success", "data": json_data})
