@@ -22,3 +22,8 @@ def floor_detail(request, pk):
 			"room_size_choices": room_size_choices,
 		}
 	)
+
+
+def room_detail(request, pk):
+	room_data = get_object_or_404(room_models.Room, pk=pk)
+	return render(request, "dashboard/room-detail.html", {"room_data": room_data})

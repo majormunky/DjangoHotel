@@ -1,6 +1,7 @@
 from django.shortcuts import render, reverse
 from django.http import JsonResponse
 from . import models
+from .api import serializers
 from core import utils as core_utils
 
 
@@ -52,4 +53,6 @@ def ajax_create_room(request):
 	)
 	new_room.save()
 
-	return JsonResponse({"result": "success"})
+	new_room_data = serializers.RoomSerializer(new_room).data
+
+	return JsonResponse({"result": "success", "data": new_room_data})
