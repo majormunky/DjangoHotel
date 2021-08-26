@@ -22,5 +22,6 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")),
     path("", include("core.urls")),
     path("", include("home.urls")),
+    path("", include("rooms.urls")),
     path("", include("booking.urls")),
 ]
