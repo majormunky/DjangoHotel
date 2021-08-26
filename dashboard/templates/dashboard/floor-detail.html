@@ -1,4 +1,5 @@
 {% extends 'dashboard-base.html' %}
+{% load static %}
 
 {% block page_name %}Floor Detail{% endblock %}
 
@@ -16,7 +17,7 @@
 				</div>
 				<div>
 					<div class="fw-bold">Rooms:</div>
-					<div>{{floor_data.rooms_set.count}}</div>
+					<div>{{floor_data.room_set.count}}</div>
 				</div>
 			</div>
 		</div>
@@ -27,8 +28,27 @@
 				Rooms
 			</div>
 			<div class="card-body">
-				{% if floor_data.rooms_set.all %}
-
+				{% if floor_data.room_set.all %}
+					<table class="table">
+						<thead>
+							<tr>
+								<th>&nbsp;</th>
+								<th>Room #</th>
+								<th>Size</th>
+								<th>Beds</th>
+							</tr>
+						</thead>
+						<tbody class="align-middle">
+							{% for room in floor_data.room_set.all %}
+								<tr>
+									<td><a href="#" class="btn btn-primary btn-sm">View</a></td>
+									<td>{{room.number}}</td>
+									<td>{{room.get_size_display}}</td>
+									<td>{{room.bed_count}}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				{% else %}
 					<p class="card-text">No rooms found for this floor</p>
 				{% endif %}
@@ -62,6 +82,7 @@
         			</select>
         		</div>
         		<div class="card-text fst-italic">Note: After creating the room you can setup the beds.</div>
+        		<div class="fw-bold text-danger" id="add-room-errors"></div>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -74,17 +95,26 @@
 {% endblock %}
 
 {% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
 <script>
 	const floor_id = "{{floor_data.id}}";
 	const csrf_token = "{{csrf_token}}";
+	const add_room_modal = new bootstrap.Modal(document.getElementById("add-room-modal"));
 
-	document.getElementById("add-room-modal-save-button").addEventListener("click", (event) => {
+
+	document.getElementById("add-room-modal-save-button").addEventListener("click", async (event) => {
 		const data = {
 			"room-number": document.getElementById("add-room-number").value,
 			"room-size": document.getElementById("add-room-size").value,
 			"floor-id": floor_id
 		}
-		console.log(data);
+		const url = "{% url 'rooms-ajax-create-room' %}";
+		const response = await postData(url, csrf_token, data);
+		if (response.result == "success") {
+			add_room_modal.hide();
+		} else {
+			document.getElementById("add-room-errors").innerHTML = response.message;
+		}
 	});
 </script>
 {% endblock %}
