@@ -6,4 +6,4 @@ def index(request):
 
 
 def floor_setup(request):
-	return render(request, "dashboard/floor_setup.html", {})
+	return render(request, "dashboard/floor-setup.html", {})
