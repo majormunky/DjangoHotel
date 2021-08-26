@@ -29,7 +29,7 @@
 			</div>
 			<div class="card-body">
 				{% if floor_data.room_set.all %}
-					<table class="table">
+					<table class="table" id="room-table">
 						<thead>
 							<tr>
 								<th>&nbsp;</th>
@@ -41,7 +41,7 @@
 						<tbody class="align-middle">
 							{% for room in floor_data.room_set.all %}
 								<tr>
-									<td><a href="#" class="btn btn-primary btn-sm">View</a></td>
+									<td><a href="{% url 'dashboard-room-detail' room.id %}" class="btn btn-primary btn-sm">View</a></td>
 									<td>{{room.number}}</td>
 									<td>{{room.get_size_display}}</td>
 									<td>{{room.bed_count}}</td>
@@ -92,6 +92,15 @@
   	</div>
 </div>
 
+<template id="room-row-template">
+	<tr>
+		<td><a href="#" class="btn btn-primary btn-sm add-room-link">View</a></td>
+		<td class="add-room-number">{{room.number}}</td>
+		<td class="add-room-size">{{room.get_size_display}}</td>
+		<td class="add-room-bed-count">{{room.bed_count}}</td>
+	</tr>
+</template>
+
 {% endblock %}
 
 {% block page_scripts %}
@@ -110,7 +119,18 @@
 		}
 		const url = "{% url 'rooms-ajax-create-room' %}";
 		const response = await postData(url, csrf_token, data);
+		console.log(response)
 		if (response.result == "success") {
+			const row_template_el = document.getElementById("room-row-template");
+			const row_template = row_template_el.content.firstElementChild.cloneNode(true);
+
+			row_template.querySelector(".add-room-link").href = response.data.url;
+			row_template.querySelector(".add-room-number").innerHTML = data["room-number"];
+			row_template.querySelector(".add-room-size").innerHTML = data["room-size"];
+			row_template.querySelector(".add-room-bed-count").innerHTML = "0";
+
+			document.getElementById("room-table").querySelector("tbody").appendChild(row_template);
+
 			add_room_modal.hide();
 		} else {
 			document.getElementById("add-room-errors").innerHTML = response.message;
