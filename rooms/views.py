@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.http import JsonResponse
 from . import models
 
@@ -14,7 +14,6 @@ def setup(request):
 
 
 # Ajax views
-
 def ajax_create_floor(request):
 	if not request.is_ajax():
 		return JsonResponse({"result": "failed", "message": "Invalid Request"})
@@ -27,4 +26,4 @@ def ajax_create_floor(request):
 	new_floor = models.Floor(number=floor_num)
 	new_floor.save()
 
-	return JsonResponse({"result": "success", "data": {"floor_id": new_floor.id, "number": new_floor.number}})
+	return JsonResponse({"result": "success", "data": {"floor_id": new_floor.id, "number": new_floor.number, "url": reverse("dashboard-floor-detail", args=new_floor.id)}})

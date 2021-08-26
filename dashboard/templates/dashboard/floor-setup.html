@@ -18,7 +18,7 @@
 				<tbody class="align-middle">
 					{% for floor in floor_list %}
 						<tr>
-							<td><a class="btn btn-primary btn-sm" href="#">View</a></td>
+							<td><a class="btn btn-primary btn-sm" href="{% url 'dashboard-floor-detail' floor.id %}">View</a></td>
 							<td>{{floor.number}}</td>
 							<td>{{floor.room_set.count}}</td>
 						</tr>
@@ -60,7 +60,7 @@
 
 <template id="floor-table-row-template">
 	<tr>
-		<td><a class="btn btn-primary btn-sm" href="#">View</a></td>
+		<td><a class="btn btn-primary btn-sm row-floor-link" href="#">View</a></td>
 		<td class="row-floor-number"></td>
 		<td class="row-room-count"></td>
 	</tr>
@@ -87,6 +87,7 @@
 			const row_template = row_template_el.content.firstElementChild.cloneNode(true);
 			row_template.querySelector(".row-floor-number").innerHTML = response.data.number;
 			row_template.querySelector(".row-room-count").innerHTML = "0";
+			row_template.querySelector(".roow-floor-link").href = response.data.url;
 
 			document.getElementById("floor-table").querySelector("tbody").appendChild(row_template);
 			document.getElementById("add-floor-number").value = "";
