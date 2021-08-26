@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rooms import models as room_models
 
 
 def index(request):
@@ -6,4 +7,5 @@ def index(request):
 
 
 def floor_setup(request):
-	return render(request, "dashboard/floor-setup.html", {})
+	floor_list = room_models.Floor.objects.all()
+	return render(request, "dashboard/floor-setup.html", {"floor_list": floor_list})
