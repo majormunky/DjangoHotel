@@ -3,9 +3,58 @@
 {% block page_name %}Floor Setup{% endblock %}
 
 {% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		{% if floor_list %}
+			<table class="table table-striped">
+				{% for floor in floor_list %}
+					<tr>
+						<td><a href="#">View</a></td>
+						<td>{{floor.number}}</td>
+						<td>{{floor.room_set.count}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% else %}
+			<div class="mb-3">
+				<p>No floors have been setup</p>
+			</div>
+		{% endif %}
+		<div class="mb-3">
+			<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-floor-modal">Add Floor</button>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="add-floor-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add Floor</h5>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      		</div>
+      		<div class="modal-body">
+        		<div>
+        			<label class="form-label">Floor Number:</label>
+        			<input type="number" class="form-control" id="add-floor-number">
+        		</div>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        		<button type="button" class="btn btn-primary" id="add-floor-modal-save-button">Add</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
 {% endblock %}
 
 {% block page_scripts %}
+<script>
+	document.getElementById('add-floor-modal-save-button').addEventListener('click', (event) => {
+		console.log("clicked")
+	});
+</script>
 {% endblock %}
 
 {% block page_styles %}
