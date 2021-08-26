@@ -12,5 +12,13 @@ def floor_setup(request):
 
 
 def floor_detail(request, pk):
+	room_size_choices = room_models.Room.SIZE_CHOICES
 	floor_data = get_object_or_404(room_models.Floor, pk=pk)
-	return render(request, "dashboard/floor-detail.html", {"floor_data": floor_data})
+	return render(
+		request,
+		"dashboard/floor-detail.html",
+		{
+			"floor_data": floor_data,
+			"room_size_choices": room_size_choices,
+		}
+	)

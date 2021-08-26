@@ -4,16 +4,85 @@
 
 {% block content %}
 <div class="row">
-	<div class="col-sm-12">
-		<div>
-			<div class="fw-bold">Floor Number:</div>
-			<div>{{floor_data.number}}</div>
+	<div class="col-sm-6">
+		<div class="card">
+			<div class="card-header fw-bold text-white bg-secondary">
+				Floor Details
+			</div>
+			<div class="card-body">
+				<div class="mb-3">
+					<div class="fw-bold">Floor Number:</div>
+					<div>{{floor_data.number}}</div>
+				</div>
+				<div>
+					<div class="fw-bold">Rooms:</div>
+					<div>{{floor_data.rooms_set.count}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="card">
+			<div class="card-header fw-bold text-white bg-secondary">
+				Rooms
+			</div>
+			<div class="card-body">
+				{% if floor_data.rooms_set.all %}
+
+				{% else %}
+					<p class="card-text">No rooms found for this floor</p>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-room-modal">Add Room</button>
+			</div>
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" tabindex="-1" id="add-room-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add Room</h5>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      		</div>
+      		<div class="modal-body">
+        		<div class="mb-3">
+        			<label class="form-label">Room Number:</label>
+        			<input type="text" class="form-control" id="add-room-number">
+        		</div>
+        		<div class="mb-3">
+        			<label class="form-label">Size:</label>
+        			<select class="form-select" id="add-room-size">
+        				<option>...</option>
+        				{% for size in room_size_choices %}
+        					<option value="{{size.0}}">{{size.1}}</option>
+        				{% endfor %}
+        			</select>
+        		</div>
+        		<div class="card-text fst-italic">Note: After creating the room you can setup the beds.</div>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        		<button type="button" class="btn btn-primary" id="add-room-modal-save-button">Save changes</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
 {% endblock %}
 
 {% block page_scripts %}
+<script>
+	document.getElementById("add-room-modal-save-button").addEventListener("click", (event) => {
+		const data = {
+			"room-number": document.getElementById("add-room-number").value,
+			"room-size": document.getElementById("add-room-size").value
+		}
+		console.log(data);
+	});
+</script>
 {% endblock %}
 
 {% block page_styles %}
