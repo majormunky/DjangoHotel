@@ -1,4 +1,3 @@
-// Example POST method implementation:
 async function postData(url, csrf, data) {
     let formData = new FormData();
     for (let k in data) {

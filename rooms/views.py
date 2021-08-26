@@ -27,4 +27,4 @@ def ajax_create_floor(request):
 	new_floor = models.Floor(number=floor_num)
 	new_floor.save()
 
-	return JsonResponse({"result": "success", "floor_id": new_floor.id})
+	return JsonResponse({"result": "success", "data": {"floor_id": new_floor.id, "number": new_floor.number}})
