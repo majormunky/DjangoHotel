@@ -1,4 +1,5 @@
 {% extends 'dashboard-base.html' %}
+{% load static %}
 
 {% block page_name %}Bed Setup{% endblock %}
 
@@ -23,14 +24,58 @@
 				{% endif %}
 			</div>
 			<div class="card-footer">
-				<button type="button" class="btn btn-primary btn-sm">Add Bed Type</button>
+				<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-bed-modal">Add Bed Type</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" tabindex="-1" id="add-bed-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add Bed Type</h5>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      		</div>
+      		<div class="modal-body">
+        		<div class="mb-3">
+        			<label class="form-label">Name:</label>
+        			<input type="text" class="form-control" id="add-bed-name">
+        		</div>
+        		<div>
+        			<label class="form-label">Description:</label>
+        			<textarea class="form-control" placeholder="Optional" id="add-bed-description"></textarea>
+        		</div>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        		<button type="button" class="btn btn-primary" id="add-bed-modal-save-button">Save changes</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
 {% endblock %}
 
 {% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
+<script>
+	const csrf_token = "{{csrf_token}}";
+	const modal = new bootstrap.Modal(document.getElementById("add-bed-modal"));
+	document.getElementById("add-bed-modal-save-button").addEventListener("click", async (event) => {
+		const data = {
+			"name": document.getElementById("add-bed-name").value,
+			"description": document.getElementById("add-bed-description").value
+		}
+		const url = "{% url 'rooms-ajax-create-bed' %}";
+
+		const response = await postData(url, csrf_token, data);
+		if (response.result == "success") {
+			modal.hide();
+		}
+	})
+
+</script>
 {% endblock %}
 
 {% block page_styles %}

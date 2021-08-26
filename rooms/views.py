@@ -56,3 +56,23 @@ def ajax_create_room(request):
 	new_room_data = serializers.RoomSerializer(new_room).data
 
 	return JsonResponse({"result": "success", "data": new_room_data})
+
+
+def ajax_create_bed(request):
+	if not request.is_ajax():
+		return JsonResponse({"result": "failed", "message": "Invalid Request"})
+
+	bed_name = request.POST.get("name", None)
+	bed_description = request.POST.get("description", None)
+
+	if bed_name is None:
+		return JsonResponse({"result": "failed", "message": "Missing Bed Name"})
+
+	existing_bed = models.Bed.objects.filter(name=bed_name)
+	if existing_bed:
+		return JsonResponse({"result": "failed", "message": "A bed already exists with that name"})
+
+	new_bed = models.Bed(name=bed_name, description=bed_description)
+	new_bed.save()
+
+	return JsonResponse({"result": "success", "data": {"bed_id": new_bed.id}})
