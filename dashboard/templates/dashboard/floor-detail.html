@@ -75,10 +75,14 @@
 
 {% block page_scripts %}
 <script>
+	const floor_id = "{{floor_data.id}}";
+	const csrf_token = "{{csrf_token}}";
+
 	document.getElementById("add-room-modal-save-button").addEventListener("click", (event) => {
 		const data = {
 			"room-number": document.getElementById("add-room-number").value,
-			"room-size": document.getElementById("add-room-size").value
+			"room-size": document.getElementById("add-room-size").value,
+			"floor-id": floor_id
 		}
 		console.log(data);
 	});
