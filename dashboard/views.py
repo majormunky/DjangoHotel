@@ -27,3 +27,8 @@ def floor_detail(request, pk):
 def room_detail(request, pk):
 	room_data = get_object_or_404(room_models.Room, pk=pk)
 	return render(request, "dashboard/room-detail.html", {"room_data": room_data})
+
+
+def bed_setup(request):
+	bed_list = room_models.Bed.objects.all()
+	return render(request, "dashboard/bed-setup.html", {"bed_list": bed_list})

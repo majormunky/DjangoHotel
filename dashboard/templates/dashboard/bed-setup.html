@@ -1,0 +1,37 @@
+{% extends 'dashboard-base.html' %}
+
+{% block page_name %}Bed Setup{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-header text-white bg-secondary fw-bold">
+				Bed Types
+			</div>
+			<div class="card-body">
+				{% if bed_list %}
+					<table class="table table-sm table-striped">
+						{% for bed in bed_list %}
+							<tr>
+								<td>{{bed.name}}</td>
+							</tr>
+						{% endfor %}
+					</table>
+				{% else %}
+					<p class="card-text">No beds found.</p>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				<button type="button" class="btn btn-primary btn-sm">Add Bed Type</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+{% endblock %}
+
+{% block page_styles %}
+{% endblock %}
