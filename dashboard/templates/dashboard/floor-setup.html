@@ -1,4 +1,5 @@
 {% extends 'dashboard-base.html' %}
+{% load static %}
 
 {% block page_name %}Floor Setup{% endblock %}
 
@@ -6,14 +7,23 @@
 <div class="row">
 	<div class="col-sm-12">
 		{% if floor_list %}
-			<table class="table table-striped">
-				{% for floor in floor_list %}
+			<table class="table table-striped" id="floor-table">
+				<thead>
 					<tr>
-						<td><a href="#">View</a></td>
-						<td>{{floor.number}}</td>
-						<td>{{floor.room_set.count}}</td>
+						<td>&nbsp;</td>
+						<td>Number</td>
+						<td>Rooms</td>
 					</tr>
-				{% endfor %}
+				</thead>
+				<tbody class="align-middle">
+					{% for floor in floor_list %}
+						<tr>
+							<td><a class="btn btn-primary btn-sm" href="#">View</a></td>
+							<td>{{floor.number}}</td>
+							<td>{{floor.room_set.count}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
 			</table>
 		{% else %}
 			<div class="mb-3">
@@ -38,6 +48,7 @@
         			<label class="form-label">Floor Number:</label>
         			<input type="number" class="form-control" id="add-floor-number">
         		</div>
+        		<div class="mt-3 fw-bold text-danger" id="add-floor-number-errors"></div>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -47,12 +58,43 @@
   	</div>
 </div>
 
+<template id="floor-table-row-template">
+	<tr>
+		<td><a class="btn btn-primary btn-sm" href="#">View</a></td>
+		<td class="row-floor-number"></td>
+		<td class="row-room-count"></td>
+	</tr>
+</template>
+
 {% endblock %}
 
 {% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
 <script>
-	document.getElementById('add-floor-modal-save-button').addEventListener('click', (event) => {
-		console.log("clicked")
+	const csrf_token = "{{csrf_token}}";
+	const modal = new bootstrap.Modal(document.getElementById('add-floor-modal'));
+
+	document.getElementById('add-floor-modal-save-button').addEventListener('click', async (event) => {
+		const data = {
+			"floor-number": document.getElementById("add-floor-number").value
+		};
+
+		const url = "{% url 'rooms-ajax-create-floor' %}";
+		const response = await postData(url, csrf_token, data);
+		if (response.result == "success") {
+			
+			const row_template_el = document.getElementById("floor-table-row-template");
+			const row_template = row_template_el.content.firstElementChild.cloneNode(true);
+			row_template.querySelector(".row-floor-number").innerHTML = response.data.number;
+			row_template.querySelector(".row-room-count").innerHTML = "0";
+
+			document.getElementById("floor-table").querySelector("tbody").appendChild(row_template);
+			document.getElementById("add-floor-number").value = "";
+
+			modal.hide();
+		} else {
+			document.getElementById('add-floor-number-errors').innerHTML = response.message;
+		}
 	});
 </script>
 {% endblock %}
