@@ -52,4 +52,4 @@ class Bed(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.get_name_display()
+        return self.name
