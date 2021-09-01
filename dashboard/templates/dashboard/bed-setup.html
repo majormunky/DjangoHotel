@@ -86,9 +86,10 @@
 		const response = await postData(url, csrf_token, data);
 		if (response.result == "success") {
 			modal.hide();
+		} else {
+			console.log(response);
 		}
-	})
-
+	});
 </script>
 {% endblock %}
 
