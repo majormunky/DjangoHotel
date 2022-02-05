@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rooms import models as floor_models
 from booking import forms as booking_forms
 
@@ -17,5 +17,14 @@ def booking(request):
 
 
 def create_booking(request):
-    form = booking_forms.BookingForm()
+    if request.method == "POST":
+        form = booking_forms.BookingForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.is_active = False
+            item.save()
+
+            return redirect("dashboard-booking")
+    else:
+        form = booking_forms.BookingForm()
     return render(request, "dashboard/create-booking.html", {"form": form})
