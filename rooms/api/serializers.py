@@ -2,6 +2,7 @@ from django.shortcuts import reverse
 from rest_framework import serializers
 from rooms import models
 
+
 class FloorSerializer(serializers.ModelSerializer):
     rooms = serializers.SerializerMethodField()
 

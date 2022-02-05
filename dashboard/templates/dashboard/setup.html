@@ -1,0 +1,187 @@
+{% extends "dashboard-base.html" %}
+{% load static %}
+
+{% block page_name %}Setup{% endblock %}
+
+{% block content %}
+{% if messages %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% for message in messages %}
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                Room List
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Floor #</th>
+                            <th>Rooms</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        {% for floor in floor_list %}
+                            <tr>
+                                <td><button data-floor-id="{{floor.id}}" class="btn btn-primary btn-sm view-floor">View</a></td>
+                                <td>{{floor.number}}</td>
+                                <td>{{floor.room_set.count}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-floor-modal">Add Floor</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                Rooms (Floor: <span id="room-number-display"></span>)
+            </div>
+            <div class="card-body">
+                <div id="room-list-for-floor">Please select a floor</div>
+            </div>
+            <div class="card-footer" id="floor-setup-footer" style="display: none;">
+                <button class="btn btn-primary btn-sm" id="generate-floors" data-bs-toggle="modal" data-bs-target="#generate-rooms-modal">Generate Floors</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="generate-rooms-modal" tabindex="-1" aria-labelledby="generate-rooms-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generate-rooms-modal-label">Generate Rooms</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label" for="room-count">Rooms to Generate:</label>
+                    <input type="text" id="room-count" class="form-control">
+                </div>
+                <div class="text-danger fw-bold" id="generate-errors"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="generate-floor-confirm-button">Generate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-floor-modal" tabindex="-1" aria-labelledby="add-floor-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-floor-modal-label">Add Floor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="md-3">
+                    <label for="floor-number" class="form-label">Floor Number:</label>
+                    <input type="text" id="floor-number" class="form-control">
+                </div>
+                <div class="text-danger fw-bold" id="create-floor-errors"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="add-floor-modal-save">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
+<script>
+    let currentFloor = null;
+    const csrfToken = "{{csrf_token}}";
+
+    document.querySelectorAll(".view-floor").forEach((el) => {
+        el.addEventListener("click", async (event) => {
+            currentFloor = event.target.dataset.floorId;
+
+            document.getElementById("room-number-display").innerHTML = currentFloor;
+
+            const url = `{% url 'api-rooms-for-floor' %}?floor_num=${currentFloor}`;
+            const response = await getData(url);
+            const wrapper = document.getElementById("room-list-for-floor");
+            if (response.length) {
+                wrapper.innerHTML = "";
+
+                let output = "<table class='table'>";
+                output += "<tr><th>Room #</th><th>Beds</th><th>Size</th></tr>";
+                for (let item of response) {
+                    output += "<tr>";
+                    output += `<td>Room: ${item.number}</td>`;
+                    output += `<td>${item.bed_count}</td>`;
+                    output += `<td>${item.size}</td>`;
+                    output += "</tr>";
+                }
+                output += "</table>";
+                wrapper.innerHTML = output;
+            } else {
+                wrapper.innerHTML = "This floor has no rooms setup";
+            }
+            document.getElementById("floor-setup-footer").style.display = "block";
+        });
+    });
+
+    document.addEventListener("shown.bs.modal", (event) => {
+        if (event.target.matches("#generate-rooms-modal")) {
+            console.log("generate rooms")
+            document.getElementById("room-count").focus();    
+        }
+        
+    });
+
+    document.getElementById("generate-floor-confirm-button").addEventListener("click", async (event) => {
+        const roomCount = parseInt(document.getElementById("room-count").value, 10);
+        const data = {
+            "floor_num": currentFloor,
+            "room_count": roomCount,
+        }
+        const url = "{% url 'api-generate-rooms' %}";
+
+        const response = await postData(url, csrfToken, data);
+        if (response.result == "success") {
+            window.location.reload(true);
+        } else {
+            document.getElementById("generate-errors").innerHTML = response.message;
+        }
+    });
+
+    document.getElementById("add-floor-modal-save").addEventListener("click", async (event) => {
+        const floorNum = document.getElementById("floor-number").value;
+        const data = {
+            "floor_num": floorNum
+        };
+        const url = "{% url 'api-create-floor' %}";
+        const response = await postData(url, csrfToken, data);
+        if (response.result == "success") {
+            window.location.reload(true);
+        } else {
+            document.getElementById("create-floor-errors").innerHTML = response.message;
+        }
+    });
+</script>
+{% endblock %}
+
+{% block page_styles %}
+{% endblock %}

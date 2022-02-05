@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 
 
@@ -12,4 +13,11 @@ class Booking(models.Model):
     room = models.OneToOneField(
         "rooms.Room", on_delete=models.CASCADE, blank=True, null=True
     )
-    created_at = models.DateTimeField()
+    scheduled_room = models.ForeignKey(
+        "rooms.Room",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="scheduled_booking",
+    )
+    created_at = models.DateTimeField(default=timezone.now)
