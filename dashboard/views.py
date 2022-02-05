@@ -12,8 +12,8 @@ def setup(request):
     return render(request, "dashboard/setup.html", {"floor_list": floor_list})
 
 
-def booking(request):
-    return render(request, "dashboard/booking.html", {})
+def bookings_list(request):
+    return render(request, "dashboard/bookings-list.html", {})
 
 
 def create_booking(request):
