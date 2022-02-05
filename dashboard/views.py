@@ -45,12 +45,25 @@ def create_booking(request):
 
 
 def find_room_for_booking(request, pk):
-    start_date = datetime.datetime.today()
+    sd_from_url = request.GET.get("sd", None)
+    if sd_from_url:
+        start_date = datetime.datetime.strptime(sd_from_url, "%m-%d-%Y")
+    else:
+        start_date = datetime.datetime.today()
+    today = datetime.datetime.today()
     date_list = generate_date_list(start_date, 14)
+    next_week = date_list[6]
+    prev_week = start_date - datetime.timedelta(days=7)
 
     room_list = floor_models.Room.objects.all()
     return render(
         request,
         "dashboard/find-room.html",
-        {"room_list": room_list, "date_list": date_list},
+        {
+            "room_list": room_list,
+            "date_list": date_list,
+            "today": today,
+            "prev_week": prev_week,
+            "next_week": next_week,
+        },
     )
