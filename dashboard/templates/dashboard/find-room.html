@@ -33,7 +33,7 @@
                 </table>
             </div>
             <div class="card-footer">
-        
+                <button class="btn btn-primary btn-sm disabled" id="next-button">Next</button>
             </div>
         </div>
         {{room_schedule}}
@@ -46,6 +46,7 @@
 <script src="https://unpkg.com/dayjs@1.10.7/plugin/customParseFormat.js"></script>
 <script>
     let selectedCells = [];
+    const totalDaysRequested = parseInt("{{total_days}}", 10);
 
     document.addEventListener("DOMContentLoaded", () => {
         dayjs.extend(window.dayjs_plugin_customParseFormat)
@@ -78,7 +79,7 @@
                 "userId": userId
             };
             
-            const dateList = buildDateList(selectedDate, 3);
+            const dateList = buildDateList(selectedDate, 4);
             
             let isValid = true;
             let elementsToHighlight = [];
@@ -104,6 +105,8 @@
                     el.classList.add("room-selected");
                     selectedCells.push(el);
                 });
+
+                document.getElementById("next-button").classList.remove("disabled");
             }
         });
     });

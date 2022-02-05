@@ -36,11 +36,18 @@ def create_booking(request):
     if request.method == "POST":
         form = booking_forms.BookingForm(request.POST)
         if form.is_valid():
+            # figure out how many total days the person wants to stay
+            # the date doesn't include the last day so we add 1 to our result
+            total_days = (
+                form.cleaned_data["end_date"] - form.cleaned_data["start_date"]
+            ).days + 1
+
             params = urlencode(
                 {
                     "user": form.cleaned_data["user"].id,
                     "start_date": form.cleaned_data["start_date"].strftime("%m-%d-%Y"),
                     "end_date": form.cleaned_data["end_date"].strftime("%m-%d-%Y"),
+                    "total_days": total_days,
                 }
             )
             base_url = reverse("dashboard-find-room")
@@ -55,8 +62,9 @@ def find_room_for_booking(request):
     sd_from_url = request.GET.get("start_date", None)
     ed_from_url = request.GET.get("end_date", None)
     user_id = request.GET.get("user", None)
+    total_days = request.GET.get("total_days", None)
 
-    if not all([sd_from_url, ed_from_url, user_id]):
+    if not all([sd_from_url, ed_from_url, user_id, total_days]):
         return redirect("dashboard-create-booking")
 
     today = datetime.datetime.today()
@@ -92,5 +100,6 @@ def find_room_for_booking(request):
             "next_week": next_week,
             "room_schedule": room_schedule,
             "user_id": user_id,
+            "total_days": int(total_days),
         },
     )
