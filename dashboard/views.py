@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rooms import models as floor_models
+from booking import forms as booking_forms
 
 # Create your views here.
 def index(request):
@@ -16,4 +17,5 @@ def booking(request):
 
 
 def create_booking(request):
-    return render(request, "dashboard/create-booking.html", {})
+    form = booking_forms.BookingForm()
+    return render(request, "dashboard/create-booking.html", {"form": form})
