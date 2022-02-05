@@ -13,19 +13,18 @@ class BookingForm(forms.ModelForm):
         self.helper.form_action = "."
         self.helper.layout = Layout(
             Fieldset(
-                '',
-                'user',
-                'start_date',
-                'end_date',
-                'scheduled_room',
+                "",
+                "user",
+                "start_date",
+                "end_date",
             ),
             ButtonHolder(
-                Submit('submit', 'Submit', css_class='btn btn-sm btn-primary')
-            )
+                Submit("submit", "Submit", css_class="btn btn-sm btn-primary")
+            ),
         )
 
-        self.fields["start_date"].input_formats = (settings.DATE_INPUT_FORMATS)
-        self.fields["end_date"].input_formats = (settings.DATE_INPUT_FORMATS)
+        self.fields["start_date"].input_formats = settings.DATE_INPUT_FORMATS
+        self.fields["end_date"].input_formats = settings.DATE_INPUT_FORMATS
 
     class Meta:
         model = models.Booking
@@ -33,5 +32,4 @@ class BookingForm(forms.ModelForm):
             "user",
             "start_date",
             "end_date",
-            "scheduled_room",
         ]
