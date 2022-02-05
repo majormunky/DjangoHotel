@@ -1,0 +1,42 @@
+{% extends "dashboard-base.html" %}
+
+{% block page_name %}Find Room{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                Find Room
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <th>Room</th>
+                        {% for a_date in date_list %}
+                            <th>{{a_date|date:"m-d"}}</th>
+                        {% endfor %}
+                    </thead>
+                    {% for room in room_list %}
+                        <tr>
+                            <td>{{room.floor.number}}:{{room.number}}</td>
+                            {% for a_date in date_list %}
+                                <td>-</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="card-footer">
+        
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+{% endblock %}
+
+{% block page_styles %}
+{% endblock %}
