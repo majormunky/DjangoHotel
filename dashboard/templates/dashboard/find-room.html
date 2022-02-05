@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-sm table-striped">
+                <table class="table table-sm">
                     <thead>
                         <th>Room</th>
                         {% for a_date in date_list %}
@@ -26,7 +26,7 @@
                         <tr>
                             <td>{{room.floor.number}}:{{room.number}}</td>
                             {% for a_date in date_list %}
-                                <td>{% room_status_for_date a_date room %}</td>
+                                {% room_status_for_date a_date room %}
                             {% endfor %}
                         </tr>
                     {% endfor %}
@@ -45,4 +45,13 @@
 {% endblock %}
 
 {% block page_styles %}
+<style>
+    .room-vacant {
+        background-color: green !important;
+    }
+
+    .room-booked {
+        background-color: red !important;
+    }
+</style>
 {% endblock %}
