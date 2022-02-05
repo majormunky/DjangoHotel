@@ -1,5 +1,5 @@
 {% extends "dashboard-base.html" %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags static %}
 
 {% block page_name %}Create Booking{% endblock %}
 
@@ -21,7 +21,19 @@
 {% endblock %}
 
 {% block page_scripts %}
+<script src="{% static 'js/mc-calendar.min.js' %}"></script>
+<script>
+    const datepickerStart = MCDatepicker.create({
+        el: "#id_start_date",
+        dateFormat: "mm-dd-yyyy",
+    });
+    const datepickerEnd = MCDatepicker.create({
+        el: "#id_end_date",
+        dateFormat: "mm-dd-yyyy",
+    });
+</script>
 {% endblock %}
 
 {% block page_styles %}
+<link rel="stylesheet" href="{% static 'css/mc-calendar.min.css' %}" />
 {% endblock %}
