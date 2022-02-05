@@ -56,6 +56,20 @@ def find_room_for_booking(request, pk):
     prev_week = start_date - datetime.timedelta(days=7)
 
     room_list = floor_models.Room.objects.all()
+
+    # build up the room schedule
+    room_schedule = {}
+
+    for d in date_list:
+        date_key = d.strftime("%m-%d-%Y")
+        room_schedule[date_key] = []
+        scheduled_room_list = floor_models.Room.objects.filter(
+            scheduled_booking__start_date__lte=d, scheduled_booking__end_date__gte=d
+        )
+        if scheduled_room_list.exists():
+            for s_room in scheduled_room_list:
+                room_schedule[date_key].append(s_room)
+
     return render(
         request,
         "dashboard/find-room.html",
@@ -65,5 +79,6 @@ def find_room_for_booking(request, pk):
             "today": today,
             "prev_week": prev_week,
             "next_week": next_week,
+            "room_schedule": room_schedule,
         },
     )
