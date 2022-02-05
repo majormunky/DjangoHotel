@@ -15,9 +15,9 @@ def room_status_for_date(context, date_obj, room_obj):
     if len(room_dict[date_key]):
         for room in room_dict[date_key]:
             if room_key == str(room):
-                return mark_safe("<td class='room-booked'>*</td>")
+                return mark_safe("<td class='room-cell room-booked'>&nbsp;</td>")
     return mark_safe(
-        "<td data-cell-date='{}' data-room-key='{}' class='room-vacant'>-</td>".format(
+        "<td data-cell-date='{}' data-room-key='{}' class='room-cell room-vacant'>&nbsp;</td>".format(
             date_key, room_key
         )
     )
