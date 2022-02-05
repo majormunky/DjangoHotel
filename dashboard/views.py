@@ -1,5 +1,7 @@
 import datetime
+from urllib.parse import urlencode
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from rooms import models as floor_models
 from booking import forms as booking_forms
 from booking import models as booking_models
@@ -34,23 +36,31 @@ def create_booking(request):
     if request.method == "POST":
         form = booking_forms.BookingForm(request.POST)
         if form.is_valid():
-            item = form.save(commit=False)
-            item.is_active = False
-            item.save()
-
-            return redirect("dashboard-find-room", pk=item.id)
+            params = urlencode(
+                {
+                    "user": form.cleaned_data["user"].id,
+                    "start_date": form.cleaned_data["start_date"].strftime("%m-%d-%Y"),
+                    "end_date": form.cleaned_data["end_date"].strftime("%m-%d-%Y"),
+                }
+            )
+            base_url = reverse("dashboard-find-room")
+            url = "{}?{}".format(base_url, params)
+            return redirect(url)
     else:
         form = booking_forms.BookingForm()
     return render(request, "dashboard/create-booking.html", {"form": form})
 
 
-def find_room_for_booking(request, pk):
-    sd_from_url = request.GET.get("sd", None)
-    if sd_from_url:
-        start_date = datetime.datetime.strptime(sd_from_url, "%m-%d-%Y")
-    else:
-        start_date = datetime.datetime.today()
+def find_room_for_booking(request):
+    sd_from_url = request.GET.get("start_date", None)
+    ed_from_url = request.GET.get("end_date", None)
+
+    if sd_from_url is None or ed_from_url is None:
+        return redirect("dashboard-create-booking")
+
     today = datetime.datetime.today()
+    start_date = datetime.datetime.strptime(sd_from_url, "%m-%d-%Y")
+
     date_list = generate_date_list(start_date, 14)
     next_week = date_list[6]
     prev_week = start_date - datetime.timedelta(days=7)

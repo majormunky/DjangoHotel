@@ -12,7 +12,7 @@ urlpatterns = [
         name="dashboard-create-booking",
     ),
     path(
-        "dashboard/booking/<int:pk>/find-room/",
+        "dashboard/booking/find-room/",
         views.find_room_for_booking,
         name="dashboard-find-room",
     ),
