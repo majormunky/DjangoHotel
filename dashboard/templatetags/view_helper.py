@@ -10,6 +10,8 @@ def room_status_for_date(context, date_obj, room_obj):
     room_dict = context["room_schedule"]
     room_key = str(room_obj)
 
+    # TODO: If we have a bunch of rooms this would work better
+    # we used the room key as a key of another dictionary under the date
     if len(room_dict[date_key]):
         for room in room_dict[date_key]:
             if room_key == str(room):
