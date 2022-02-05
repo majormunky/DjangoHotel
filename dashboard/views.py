@@ -54,8 +54,9 @@ def create_booking(request):
 def find_room_for_booking(request):
     sd_from_url = request.GET.get("start_date", None)
     ed_from_url = request.GET.get("end_date", None)
+    user_id = request.GET.get("user", None)
 
-    if sd_from_url is None or ed_from_url is None:
+    if not all([sd_from_url, ed_from_url, user_id]):
         return redirect("dashboard-create-booking")
 
     today = datetime.datetime.today()
@@ -90,5 +91,6 @@ def find_room_for_booking(request):
             "prev_week": prev_week,
             "next_week": next_week,
             "room_schedule": room_schedule,
+            "user_id": user_id,
         },
     )

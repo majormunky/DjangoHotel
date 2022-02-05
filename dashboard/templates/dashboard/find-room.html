@@ -42,6 +42,72 @@
 {% endblock %}
 
 {% block page_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+<script src="https://unpkg.com/dayjs@1.10.7/plugin/customParseFormat.js"></script>
+<script>
+    let selectedCells = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        dayjs.extend(window.dayjs_plugin_customParseFormat)
+    });
+
+    function buildDateList(dateStr, days) {
+        const result = [];
+        const dayObj = dayjs(dateStr, "MM-DD-YYYY");
+
+        result.push(dayObj);
+
+        for (let i = 1; i < days; i++) {
+            result.push(dayObj.add(i, 'day'));
+        }
+
+        return result;
+    }
+
+    const userId = "{{user_id}}";
+    document.querySelectorAll(".room-vacant").forEach((el) => {
+        el.addEventListener("click", (event) => {
+            const selectedDate = event.target.dataset.cellDate;
+            const roomParts = event.target.dataset.roomKey.split(":");
+            const floorNum = roomParts[0];
+            const roomNum = roomParts[1];
+            const data = {
+                "selectedDate": selectedDate,
+                "floorNum": floorNum,
+                "roomNum": roomNum,
+                "userId": userId
+            };
+            
+            const dateList = buildDateList(selectedDate, 3);
+            
+            let isValid = true;
+            let elementsToHighlight = [];
+            dateList.forEach((d) => {
+                const cell = document.querySelector(`[data-cell-date='${d.format('MM-DD-YYYY')}'][data-room-key='${event.target.dataset.roomKey}']`);
+                if (cell) {
+                    if (cell.classList.contains("room-booked")) {
+                        isValid = false;
+                    } else {
+                        elementsToHighlight.push(cell);
+                    }    
+                } else {
+                    isValid = false;
+                }
+            });
+
+            console.log(isValid);
+            console.log(elementsToHighlight);
+
+            if (isValid) {
+                elementsToHighlight.forEach((el) => {
+                    el.classList.remove("room-vacant");
+                    el.classList.add("room-selected");
+                    selectedCells.push(el);
+                });
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 {% block page_styles %}
@@ -52,6 +118,14 @@
 
     .room-booked {
         background-color: red !important;
+    }
+
+    .room-vacant:hover {
+        background-color: blue !important;
+    }
+
+    .room-selected {
+        background-color: blue !important;
     }
 </style>
 {% endblock %}
