@@ -9,8 +9,5 @@ class BookingForm(forms.ModelForm):
             "user",
             "start_date",
             "end_date",
-            "is_active",
-            "check_in_time",
-            "room",
             "scheduled_room",
         ]
