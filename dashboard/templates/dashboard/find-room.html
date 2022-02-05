@@ -26,9 +26,7 @@
                         <tr>
                             <td>{{room.floor.number}}:{{room.number}}</td>
                             {% for a_date in date_list %}
-
-                                <td>-</td>
-                                
+                                <td>{% room_status_for_date a_date room %}</td>
                             {% endfor %}
                         </tr>
                     {% endfor %}
