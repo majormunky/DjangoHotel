@@ -10,7 +10,11 @@
                 Current Bookings
             </div>
             <div class="card-body">
-                <p class="card-text">No current bookings found</p>
+                {% if bookings_list %}
+                    
+                {% else %}
+                    <p class="card-text">No current bookings found</p>
+                {% endif %}
             </div>
             <div class="card-footer">
                 <a class="btn btn-primary btn-sm" href="{% url 'dashboard-create-booking' %}">Create</a>
