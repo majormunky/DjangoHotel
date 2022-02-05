@@ -11,7 +11,26 @@
             </div>
             <div class="card-body">
                 {% if bookings_list %}
-                    
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>User</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-middle">
+                            {% for booking in bookings_list %}
+                                <tr>
+                                    <td><a href="#" class="btn btn-primary btn-sm">View</a></td>
+                                    <td>{{booking.user}}</td>
+                                    <td>{{booking.start_date}}</td>
+                                    <td>{{booking.end_date}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% else %}
                     <p class="card-text">No current bookings found</p>
                 {% endif %}

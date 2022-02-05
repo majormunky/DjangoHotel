@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from rooms import models as floor_models
 from booking import forms as booking_forms
+from booking import models as booking_models
 
-# Create your views here.
+
 def index(request):
     return render(request, "dashboard/index.html", {})
 
@@ -13,7 +14,10 @@ def setup(request):
 
 
 def bookings_list(request):
-    return render(request, "dashboard/bookings-list.html", {})
+    bookings_list = booking_models.Booking.objects.all()
+    return render(
+        request, "dashboard/bookings-list.html", {"bookings_list": bookings_list}
+    )
 
 
 def create_booking(request):
