@@ -47,6 +47,7 @@
 <script>
     let selectedCells = [];
     const totalDaysRequested = parseInt("{{total_days}}", 10);
+    const userId = "{{user_id}}";
 
     document.addEventListener("DOMContentLoaded", () => {
         dayjs.extend(window.dayjs_plugin_customParseFormat)
