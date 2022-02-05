@@ -65,7 +65,7 @@
         return result;
     }
 
-    const userId = "{{user_id}}";
+    
     document.querySelectorAll(".room-vacant").forEach((el) => {
         el.addEventListener("click", (event) => {
             const selectedDate = event.target.dataset.cellDate;
@@ -95,9 +95,6 @@
                     isValid = false;
                 }
             });
-
-            console.log(isValid);
-            console.log(elementsToHighlight);
 
             if (isValid) {
                 elementsToHighlight.forEach((el) => {
