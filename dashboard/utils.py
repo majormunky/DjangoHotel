@@ -74,6 +74,16 @@ def book_room(user_id, room_data):
         if existing_booking.exists():
             return None
 
+        # check if the room is currently occupied
+        checked_in_room = booking_models.Booking.objects.filter(
+            room=room_obj,
+            start_date__lte=a_date,
+            end_date__gte=a_date,
+        )
+
+        if checked_in_room.exists():
+            return None
+
     # create a new booking
     new_booking = booking_models.Booking(
         start_date=start_date,
