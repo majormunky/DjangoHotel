@@ -111,7 +111,9 @@ def find_room_for_booking(request):
 
 def booking_detail(request, pk):
     booking_data = get_object_or_404(booking_models.Booking, pk=pk)
-    booking_logs = booking_models.BookingLog.objects.filter(booking=booking_data)
+    booking_logs = booking_models.BookingLog.objects.filter(
+        booking=booking_data
+    ).order_by("-when")
     return render(
         request,
         "dashboard/booking-detail.html",
@@ -130,6 +132,12 @@ def check_in_user(request, pk):
         booking_data.scheduled_room = None
         booking_data.status = "checked_in"
         booking_data.save()
+
+        booking_log = booking_models.BookingLog(
+            booking=booking_data, what="Customer was checked-in"
+        )
+        booking_log.save()
+
         messages.add_message(request, messages.SUCCESS, "User checked in!")
 
     return redirect("dashboard-booking-detail", pk=pk)
