@@ -29,3 +29,9 @@ class Booking(models.Model):
         related_name="scheduled_booking",
     )
     created_at = models.DateTimeField(default=timezone.now)
+
+
+class BookingLog(models.Model):
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    when = models.DateTimeField(default=timezone.now)
+    what = models.TextField()
