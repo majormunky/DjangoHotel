@@ -1,6 +1,5 @@
 import pytest
 import datetime
-import pytz
 from mixer.backend.django import mixer
 from django.contrib.auth import get_user_model
 from rooms import models as room_models
@@ -42,9 +41,8 @@ def booking_list(normal_user, rooms):
     |--------|                      Room 1
        |----------|                 Room 2
     """
-    tz = pytz.timezone("US/Pacific")
-    b1_start_date = datetime.datetime(2021, 8, 1, 17, 0, 0).astimezone(tz)
-    b1_end_date = datetime.datetime(2021, 8, 10, 11, 0, 0).astimezone(tz)
+    b1_start_date = datetime.date(2021, 8, 1)
+    b1_end_date = datetime.date(2021, 8, 10)
 
     floor = room_models.Floor.objects.get(number=1)
 
@@ -58,8 +56,8 @@ def booking_list(normal_user, rooms):
     )
     booking1.save()
 
-    b2_start_date = datetime.datetime(2021, 8, 4, 17, 0, 0).astimezone(tz)
-    b2_end_date = datetime.datetime(2021, 8, 15, 11, 0, 0).astimezone(tz)
+    b2_start_date = datetime.date(2021, 8, 4)
+    b2_end_date = datetime.date(2021, 8, 15)
     room2 = room_models.Room.objects.get(floor=floor, number=2)
 
     booking2 = mixer.blend(
