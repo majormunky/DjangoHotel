@@ -37,9 +37,15 @@ class Booking(models.Model):
                 "message": "Current booking already has room set",
             }
 
+        if self.status != "scheduled":
+            return {
+                "result": "failed",
+                "message": "Status is not set to Scheduled, unable to check in",
+            }
+
         room = self.scheduled_room
 
-        if room.booking:
+        if hasattr(room, "booking"):
             return {"result": "failed", "message": "Room is already booked"}
 
         self.room = room
