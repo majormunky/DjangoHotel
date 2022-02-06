@@ -1,4 +1,5 @@
 {% extends "dashboard-base.html" %}
+{% load static %}
 
 {% block page_name %}Find Room{% endblock %}
 
@@ -44,10 +45,12 @@
 {% block page_scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
 <script src="https://unpkg.com/dayjs@1.10.7/plugin/customParseFormat.js"></script>
+<script src="{% static 'js/ajax.js' %}"></script>
 <script>
     let selectedCells = [];
     const totalDaysRequested = parseInt("{{total_days}}", 10);
     const userId = "{{user_id}}";
+    const csrfToken = "{{csrf_token}}";
 
     document.addEventListener("DOMContentLoaded", () => {
         dayjs.extend(window.dayjs_plugin_customParseFormat)
@@ -107,6 +110,30 @@
                 document.getElementById("next-button").classList.remove("disabled");
             }
         });
+    });
+
+    document.getElementById("next-button").addEventListener("click", async (event) => {
+        let data = {
+            rooms: null,
+            user_id: userId,
+        };
+
+        const rooms = [];
+
+        selectedCells.forEach((cell) => {
+            rooms.push({
+                "room_key": cell.dataset.roomKey,
+                "room_date": cell.dataset.cellDate
+            });
+        })
+        data.rooms = JSON.stringify(rooms);
+        const url = "{% url 'dashboard-ajax-book-room' %}";
+        let response = await postData(url, csrfToken, data, {returnType: "json"});
+        if (response.result == "success") {
+            window.location.href = response.redirect_url;
+        } else {
+            console.log(response);
+        }
     });
 </script>
 {% endblock %}

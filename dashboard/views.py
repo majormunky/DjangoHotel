@@ -1,7 +1,10 @@
+import json
 import datetime
 from urllib.parse import urlencode
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
 from rooms import models as floor_models
 from booking import forms as booking_forms
 from booking import models as booking_models
@@ -110,3 +113,50 @@ def booking_detail(request, pk):
     return render(
         request, "dashboard/booking-detail.html", {"booking_data": booking_data}
     )
+
+
+def ajax_book_room(request):
+    user_id = request.POST.get("user_id", None)
+    room_list = request.POST.get("rooms")
+    room_list = json.loads(room_list)
+
+    room_key = None
+    room_days = []
+
+    for room in room_list:
+        if room_key is None:
+            room_key = room["room_key"]
+
+        date_obj = datetime.datetime.strptime(room["room_date"], "%m-%d-%Y").date()
+        room_days.append(date_obj)
+
+    room_days = sorted(room_days)
+    start_date = room_days[0]
+    end_date = room_days[-1]
+
+    user_obj = get_object_or_404(get_user_model(), pk=user_id)
+
+    room_parts = room_key.split(":")
+
+    floor_obj = floor_models.Floor.objects.get(number=room_parts[0])
+
+    print("Floor Obj:", floor_obj)
+    room_num = room_parts[1]
+    print("room num", room_num, "done room num")
+    room_obj = floor_models.Room.objects.get(
+        number=room_parts[1].strip(), floor=floor_obj
+    )
+    print(room_obj)
+
+    new_booking = booking_models.Booking(
+        start_date=start_date,
+        end_date=end_date,
+        user=user_obj,
+        scheduled_room=room_obj,
+    )
+    new_booking.save()
+    print(new_booking.id)
+
+    new_url = reverse("dashboard-booking-detail", args=[new_booking.id])
+
+    return JsonResponse({"result": "success", "redirect_url": new_url})

@@ -21,4 +21,9 @@ urlpatterns = [
         views.find_room_for_booking,
         name="dashboard-find-room",
     ),
+    path(
+        "dashboard/ajax/book-room/",
+        views.ajax_book_room,
+        name="dashboard-ajax-book-room",
+    ),
 ]
