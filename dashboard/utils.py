@@ -23,7 +23,15 @@ def generate_date_list(start_date, days_to_generate):
 
 
 def book_room(user_id, room_data):
-    # convert the string of data to an object
+    """
+    user_id -> user id of user that will be booking room
+    room_data -> list of dictionaries with room_key and room_date keys
+        room_key -> string of the room "floor_num: room_num"
+        room_date -> date string of a single day that user has room
+
+    this will either book a room with the requested schedule
+    or return None if there was a conflict of some sort
+    """
 
     # setup some variables for later
     room_key = None
