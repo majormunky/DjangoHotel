@@ -23,15 +23,26 @@ def test_booking_check_in_fails_if_occupied(normal_user, booking_list):
         start_date=existing_booking.start_date,
         end_date=existing_booking.end_date,
         scheduled_room=room,
+        status="scheduled",
     )
     new_booking.save()
 
     # this should work
     existing_checkin = existing_booking.check_in()
-    print("existing checkin", existing_checkin)
-    print(existing_booking.room, existing_booking.status)
 
     # this should fail as the room is already booked
     result = new_booking.check_in()
-    print("new checkin", result)
     assert result["result"] == "failed"
+    assert result["message"] == "Room is already booked"
+
+
+@pytest.mark.django_db
+def test_booking_check_in_twice_will_fail(booking_list):
+    booking = booking_list.first()
+    first_result = booking.check_in()
+    assert first_result["result"] == "success"
+
+    result = booking.check_in()
+
+    assert result["result"] == "failed"
+    assert result["message"] == "Current booking already has room set"
