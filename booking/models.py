@@ -30,6 +30,20 @@ class Booking(models.Model):
     )
     created_at = models.DateTimeField(default=timezone.now)
 
+    def save(self, *args, **kwargs):
+        is_new = True
+
+        if self.id:
+            is_new = False
+
+        super(Booking, self).save(*args, **kwargs)
+
+        if is_new:
+            log = BookingLog(booking=self, what="Booking created")
+            log.save()
+
+        return self
+
     def check_in(self):
         if self.room:
             return {
