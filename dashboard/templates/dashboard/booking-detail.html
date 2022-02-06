@@ -8,6 +8,19 @@
         <div class="mb-3">
             <a href="{% url 'dashboard-booking' %}" class="btn btn-primary btn-sm">Back</a>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    <div class="alert alert-error alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> {{message}}.
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Success!</strong> {{message}}.
+                {% endif %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
         <div class="card">
             <div class="card-header">
                 Booking: {{booking_data.user}}
@@ -26,8 +39,13 @@
                     {{booking_data.end_date}}
                 </div>
                 <div class="mb-2">
-                    <div class="fw-bold">Scheduled Room:</div>
-                    Floor: {{booking_data.scheduled_room.floor.number}}, Room: {{booking_data.scheduled_room.number}}
+                    {% if booking_data.status == "scheduled" %}
+                        <div class="fw-bold">Scheduled Room:</div>
+                        Floor: {{booking_data.scheduled_room.floor.number}}, Room: {{booking_data.scheduled_room.number}}
+                    {% elif booking_data.status == "checked_in" %}
+                        <div class="fw-bold">Room:</div>
+                        Floor: {{booking_data.room.floor.number}}, Room: {{booking_data.room.number}}
+                    {% endif %}
                 </div>
                 <div>
                     <div class="fw-bold">Status:</div>
@@ -35,7 +53,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button class="btn btn-primary btn-sm">Check In</button>
+                <a class="btn btn-primary btn-sm" href="{% url 'dashboard-check-in-user' booking_data.id %}">Check In</a>
             </div>
         </div>
     </div>

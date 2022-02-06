@@ -22,6 +22,11 @@ urlpatterns = [
         name="dashboard-find-room",
     ),
     path(
+        "dashboard/booking/check-in-user/<int:pk>/",
+        views.check_in_user,
+        name="dashboard-check-in-user",
+    ),
+    path(
         "dashboard/ajax/book-room/",
         views.ajax_book_room,
         name="dashboard-ajax-book-room",

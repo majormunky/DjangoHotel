@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 from rooms import models as floor_models
 from booking import forms as booking_forms
 from booking import models as booking_models
@@ -115,6 +116,22 @@ def booking_detail(request, pk):
     )
 
 
+def check_in_user(request, pk):
+    booking_data = get_object_or_404(booking_models.Booking, pk=pk)
+    room = booking_data.scheduled_room
+
+    if hasattr(room, "booking"):
+        messages.add_message(request, messages.ERROR, "This room is currently booked!")
+    else:
+        booking_data.room = room
+        booking_data.scheduled_room = None
+        booking_data.status = "checked_in"
+        booking_data.save()
+        messages.add_message(request, messages.SUCCESS, "User checked in!")
+
+    return redirect("dashboard-booking-detail", pk=pk)
+
+
 def ajax_book_room(request):
     # TODO: Perform more server side checking to be sure no room is scheduled twice
     user_id = request.POST.get("user_id", None)
@@ -152,6 +169,7 @@ def ajax_book_room(request):
         end_date=end_date,
         user=user_obj,
         scheduled_room=room_obj,
+        status="scheduled",
     )
     new_booking.save()
 
