@@ -46,3 +46,13 @@ def test_booking_check_in_twice_will_fail(booking_list):
 
     assert result["result"] == "failed"
     assert result["message"] == "Current booking already has room set"
+
+
+@pytest.mark.django_db
+def test_booking_check_in_generates_log(booking_list):
+    booking = booking_list.first()
+    result = booking.check_in()
+
+    assert result["result"] == "success"
+    assert booking.bookinglog_set.all().count() == 1
+    assert booking.bookinglog_set.all().first().what == "User has checked in"
