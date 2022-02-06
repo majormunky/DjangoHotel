@@ -7,6 +7,11 @@ urlpatterns = [
     path("dashboard/setup/", views.setup, name="dashboard-setup"),
     path("dashboard/bookings/", views.bookings_list, name="dashboard-booking"),
     path(
+        "dashboard/bookings/<int:pk>/",
+        views.booking_detail,
+        name="dashboard-booking-detail",
+    ),
+    path(
         "dashboard/booking/create/",
         views.create_booking,
         name="dashboard-create-booking",

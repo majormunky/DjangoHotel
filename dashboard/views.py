@@ -1,6 +1,6 @@
 import datetime
 from urllib.parse import urlencode
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from rooms import models as floor_models
 from booking import forms as booking_forms
@@ -102,4 +102,11 @@ def find_room_for_booking(request):
             "user_id": user_id,
             "total_days": int(total_days),
         },
+    )
+
+
+def booking_detail(request, pk):
+    booking_data = get_object_or_404(booking_models.Booking, pk=pk)
+    return render(
+        request, "dashboard/booking-detail.html", {"booking_data": booking_data}
     )

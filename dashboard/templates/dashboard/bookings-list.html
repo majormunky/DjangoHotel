@@ -23,7 +23,7 @@
                         <tbody class="align-middle">
                             {% for booking in bookings_list %}
                                 <tr>
-                                    <td><a href="#" class="btn btn-primary btn-sm">View</a></td>
+                                    <td><a href="{% url 'dashboard-booking-detail' booking.id %}" class="btn btn-primary btn-sm">View</a></td>
                                     <td>{{booking.user}}</td>
                                     <td>{{booking.start_date}}</td>
                                     <td>{{booking.end_date}}</td>
