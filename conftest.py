@@ -70,3 +70,16 @@ def booking_list(normal_user, rooms):
     booking2.save()
 
     return booking_models.Booking.objects.all()
+
+
+@pytest.fixture
+def booking_list_room1_occupied(booking_list):
+    room1 = room_models.Room.objects.get(number=1)
+
+    booking1 = booking_models.Booking.objects.get(scheduled_room=room1)
+    booking1.scheduled_room = None
+    booking1.room = room1
+    booking1.status = "checked_in"
+    booking1.save()
+
+    return booking1
