@@ -173,6 +173,9 @@ def ajax_book_room(request):
     )
     new_booking.save()
 
+    booking_log = booking_models.BookingLog(booking=new_booking, what="Booking created")
+    booking_log.save()
+
     new_url = reverse("dashboard-booking-detail", args=[new_booking.id])
 
     return JsonResponse({"result": "success", "redirect_url": new_url})
