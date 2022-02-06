@@ -54,5 +54,13 @@ def test_booking_check_in_generates_log(booking_list):
     result = booking.check_in()
 
     assert result["result"] == "success"
+    assert booking.bookinglog_set.all().count() == 2
+    assert booking.bookinglog_set.all().last().what == "User has checked in"
+
+
+@pytest.mark.django_db
+def test_new_booking_generates_log(booking_list):
+    booking = booking_list.first()
+
     assert booking.bookinglog_set.all().count() == 1
-    assert booking.bookinglog_set.all().first().what == "User has checked in"
+    assert booking.bookinglog_set.all().first().what == "Booking created"
