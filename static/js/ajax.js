@@ -14,7 +14,7 @@ async function postData(url, csrf, data, options) {
         body: formData
     });
 
-    if (options.returnType == "json") {
+    if (options?.returnType == "json") {
         return response.json();
     }
 
