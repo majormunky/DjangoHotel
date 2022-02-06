@@ -1,5 +1,5 @@
 // Example POST method implementation:
-async function postData(url, csrf, data) {
+async function postData(url, csrf, data, options) {
     let formData = new FormData();
     for (let k in data) {
         formData.append(k, data[k])
@@ -13,7 +13,12 @@ async function postData(url, csrf, data) {
         },
         body: formData
     });
-    return response.json();
+
+    if (options.returnType == "json") {
+        return response.json();
+    }
+
+    return response;
 }
 
 async function getData(url) {

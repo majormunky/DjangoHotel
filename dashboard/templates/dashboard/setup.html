@@ -159,7 +159,7 @@
         }
         const url = "{% url 'api-generate-rooms' %}";
 
-        const response = await postData(url, csrfToken, data);
+        const response = await postData(url, csrfToken, data, {returnType: "json"});
         if (response.result == "success") {
             window.location.reload(true);
         } else {
@@ -173,7 +173,7 @@
             "floor_num": floorNum
         };
         const url = "{% url 'api-create-floor' %}";
-        const response = await postData(url, csrfToken, data);
+        const response = await postData(url, csrfToken, data, {returnType: "json"});
         if (response.result == "success") {
             window.location.reload(true);
         } else {

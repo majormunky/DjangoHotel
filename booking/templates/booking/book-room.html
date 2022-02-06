@@ -38,7 +38,7 @@
 
         const postUrl = "{% url 'ajax-check-booking' %}";
 
-        const response = await postData(postUrl, csrfToken, data);
+        const response = await postData(postUrl, csrfToken, data, {returnType: "json"});
         console.log(response);
     });
 </script>
