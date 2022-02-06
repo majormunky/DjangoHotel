@@ -111,8 +111,11 @@ def find_room_for_booking(request):
 
 def booking_detail(request, pk):
     booking_data = get_object_or_404(booking_models.Booking, pk=pk)
+    booking_logs = booking_models.BookingLog.objects.filter(booking=booking_data)
     return render(
-        request, "dashboard/booking-detail.html", {"booking_data": booking_data}
+        request,
+        "dashboard/booking-detail.html",
+        {"booking_data": booking_data, "logs": booking_logs},
     )
 
 
