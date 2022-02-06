@@ -9,20 +9,24 @@
             </div>
             <div class="card-body">
                 <div class="mb-2">
-                    <label class="form-label">User:</label>
+                    <div class="fw-bold">User:</div>
                     {{booking_data.user}}
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Start Date:</label>
+                    <div class="fw-bold">Start Date:</div>
                     {{booking_data.start_date}}
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">End Date:</label>
+                    <div class="fw-bold">End Date:</div>
                     {{booking_data.end_date}}
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Scheduled Room:</label>
-                    {{booking_data.scheduled_room}}
+                    <div class="fw-bold">Scheduled Room:</div>
+                    Floor: {{booking_data.scheduled_room.floor.number}}, Room: {{booking_data.scheduled_room.number}}
+                </div>
+                <div>
+                    <div class="fw-bold">Status:</div>
+                    {{booking_data.get_status_display}}
                 </div>
             </div>
             <div class="card-footer">
