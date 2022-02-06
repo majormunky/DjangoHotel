@@ -145,36 +145,53 @@ def check_in_user(request, pk):
 
 def ajax_book_room(request):
     # TODO: Perform more server side checking to be sure no room is scheduled twice
+
+    # get the data from the request
     user_id = request.POST.get("user_id", None)
     room_list = request.POST.get("rooms")
+
+    # convert the string of data to an object
     room_list = json.loads(room_list)
 
+    # setup some variables for later
     room_key = None
     room_days = []
 
+    # go over each room in our room list
     for room in room_list:
+        # our request is only about one room
+        # so we just need to grab the room key from one
+        # of our schedule days
         if room_key is None:
             room_key = room["room_key"]
 
+        # build a date for the day we want the room for
         date_obj = datetime.datetime.strptime(room["room_date"], "%m-%d-%Y").date()
         room_days.append(date_obj)
 
+    # we now have a list of days that the person wants a room for
+    # we really want the start and end dates though, so we sort our list
+    # and grab the first and last items to get that
     room_days = sorted(room_days)
     start_date = room_days[0]
     end_date = room_days[-1]
 
+    # get our user for this booking
     user_obj = get_object_or_404(get_user_model(), pk=user_id)
 
+    # our room key contains the floor number and the room number
     room_parts = room_key.split(":")
 
+    # get our floor
     floor_obj = floor_models.Floor.objects.get(number=room_parts[0])
 
-    room_num = room_parts[1]
+    # get the room number
+    room_num = room_parts[1].strip()
 
-    room_obj = floor_models.Room.objects.get(
-        number=room_parts[1].strip(), floor=floor_obj
-    )
+    # get the room
+    room_obj = floor_models.Room.objects.get(number=room_num, floor=floor_obj)
 
+    # create a new booking
     new_booking = booking_models.Booking(
         start_date=start_date,
         end_date=end_date,
@@ -184,9 +201,11 @@ def ajax_book_room(request):
     )
     new_booking.save()
 
+    # log that it happened
     booking_log = booking_models.BookingLog(booking=new_booking, what="Booking created")
     booking_log.save()
 
+    # build a url for the client to redirect to
     new_url = reverse("dashboard-booking-detail", args=[new_booking.id])
 
     return JsonResponse({"result": "success", "redirect_url": new_url})
