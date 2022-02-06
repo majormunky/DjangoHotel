@@ -114,15 +114,21 @@ def booking_detail(request, pk):
 
 
 def check_in_user(request, pk):
+    action = request.POST.get("action", None)
+    if action is None or action != "check-in":
+        return JsonResponse({"result": "failed", "message": "Missing Data"})
+
     booking_data = get_object_or_404(booking_models.Booking, pk=pk)
 
-    if booking_data.check_in():
+    check_in_result = booking_data.check_in()
+
+    if check_in_result["result"] == "success":
         messages.add_message(request, messages.SUCCESS, "User checked in!")
+    elif check_in_result["result"] == "failed":
+        messages.add_message(request, messages.ERROR, check_in_result["message"])
     else:
-        messages.add_message(
-            request, messages.ERROR, "There was a problem checking this user in"
-        )
-    return redirect("dashboard-booking-detail", pk=pk)
+        messages.add_message(request, messages.ERROR, "Unknown Error!")
+    return JsonResponse({"result": "success"})
 
 
 def ajax_book_room(request):

@@ -1,4 +1,5 @@
 {% extends "dashboard-base.html" %}
+{% load static %}
 
 {% block page_name %}Booking Detail{% endblock %}
 
@@ -92,10 +93,15 @@
 {% endblock %}
 
 {% block page_scripts %}
+<script src="{% static 'js/ajax.js' %}"></script>
 <script>
+    const csrfToken = "{{csrf_token}}";
     const confirmUrl = "{% url 'dashboard-check-in-user' booking_data.id %}";
-    document.getElementById("confirm-check-in-modal-save-button").addEventListener("click", (event) => {
-        window.location.href = confirmUrl;
+    document.getElementById("confirm-check-in-modal-save-button").addEventListener("click", async (event) => {
+        let response = await postData(confirmUrl, csrfToken, {"action": "check-in"}, {"returnType": "json"});
+        if (response.result == "success") {
+            window.location.reload(true);
+        }
     })
 </script>
 {% endblock %}
