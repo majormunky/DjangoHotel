@@ -13,6 +13,15 @@ def get_object_or_none(model_class, *, pk):
     return obj
 
 
+def generate_date_list(start_date, days_to_generate):
+    result = [start_date]
+    day_delta = datetime.timedelta(hours=24)
+    for i in range(days_to_generate):
+        start_date += day_delta
+        result.append(start_date)
+    return result
+
+
 def book_room(user_id, room_data):
     # convert the string of data to an object
 

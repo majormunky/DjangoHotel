@@ -12,15 +12,6 @@ from booking import models as booking_models
 from dashboard import utils
 
 
-def generate_date_list(start_date, days_to_generate):
-    result = [start_date]
-    day_delta = datetime.timedelta(hours=24)
-    for i in range(days_to_generate):
-        start_date += day_delta
-        result.append(start_date)
-    return result
-
-
 def index(request):
     return render(request, "dashboard/index.html", {})
 
@@ -75,7 +66,7 @@ def find_room_for_booking(request):
     today = datetime.datetime.today()
     start_date = datetime.datetime.strptime(sd_from_url, "%m-%d-%Y")
 
-    date_list = generate_date_list(start_date, 14)
+    date_list = utils.generate_date_list(start_date, 14)
     next_week = date_list[6]
     prev_week = start_date - datetime.timedelta(days=7)
 
