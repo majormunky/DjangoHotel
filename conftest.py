@@ -53,6 +53,7 @@ def booking_list(normal_user, rooms):
         end_date=b1_end_date,
         scheduled_room=room1,
         user=normal_user,
+        status="scheduled",
     )
     booking1.save()
 
@@ -66,6 +67,7 @@ def booking_list(normal_user, rooms):
         end_date=b2_end_date,
         scheduled_room=room2,
         user=normal_user,
+        status="scheduled",
     )
     booking2.save()
 
