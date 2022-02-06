@@ -31,17 +31,18 @@ class Booking(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     def check_in(self):
-        if hasattr(self, "room"):
-            return False
+        if self.room:
+            return {"result": "failed", "message": "Room is already booked"}
 
         room = self.scheduled_room
         self.room = room
         self.scheduled_room = None
         self.status = "checked_in"
+        self.save()
 
         log = BookingLog(booking=self, what="User has checked in")
         log.save()
-        return True
+        return {"result": "success"}
 
 
 class BookingLog(models.Model):
