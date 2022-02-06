@@ -52,10 +52,11 @@
                     {{booking_data.get_status_display}}
                 </div>
             </div>
-            <div class="card-footer">
-                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#confirm-check-in-modal">Check-In</button>
-
-            </div>
+            {% if booking_data.status == "scheduled" %}
+                <div class="card-footer">
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#confirm-check-in-modal">Check-In</button>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
