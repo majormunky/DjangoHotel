@@ -11,6 +11,7 @@ def test_booking_check_in_works(booking_list):
     result = booking.check_in()
 
     assert result["result"] == "success"
+    assert booking.status == "checked_in"
 
 
 @pytest.mark.django_db
