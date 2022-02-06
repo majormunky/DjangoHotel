@@ -32,9 +32,16 @@ class Booking(models.Model):
 
     def check_in(self):
         if self.room:
-            return {"result": "failed", "message": "Room is already booked"}
+            return {
+                "result": "failed",
+                "message": "Current booking already has room set",
+            }
 
         room = self.scheduled_room
+
+        if room.booking:
+            return {"result": "failed", "message": "Room is already booked"}
+
         self.room = room
         self.scheduled_room = None
         self.status = "checked_in"
