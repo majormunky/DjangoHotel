@@ -23,7 +23,16 @@ def test_utils_book_room_works(normal_user, booking_list):
 
 
 @pytest.mark.django_db
-def test_utils_book_room_with_conflict(normal_user, booking_list):
+def test_utils_book_room_with_schedule_conflict(normal_user, booking_list):
+    room_string = '[{"room_key":"1: 1","room_date":"08-02-2021"},{"room_key":"1: 1","room_date":"08-03-2021"},{"room_key":"1: 1","room_date":"08-04-2021"}]'
+    room_data = json.loads(room_string)
+
+    result = utils.book_room(normal_user.id, room_data)
+    assert result is None
+
+
+@pytest.mark.django_db
+def test_utils_book_room_with_person_in_room(normal_user, booking_list_room1_occupied):
     room_string = '[{"room_key":"1: 1","room_date":"08-02-2021"},{"room_key":"1: 1","room_date":"08-03-2021"},{"room_key":"1: 1","room_date":"08-04-2021"}]'
     room_data = json.loads(room_string)
 
