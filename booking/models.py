@@ -30,6 +30,19 @@ class Booking(models.Model):
     )
     created_at = models.DateTimeField(default=timezone.now)
 
+    def check_in(self):
+        if hasattr(self, "room"):
+            return False
+
+        room = self.scheduled_room
+        self.room = room
+        self.scheduled_room = None
+        self.status = "checked_in"
+
+        log = BookingLog(booking=self, what="User has checked in")
+        log.save()
+        return True
+
 
 class BookingLog(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
