@@ -63,6 +63,17 @@ def book_room(user_id, room_data):
     except room_models.Room.ObjectDoesNotExist:
         return None
 
+    for a_date in room_days:
+        # check to see if this room is booked on any of the days requested
+        existing_booking = booking_models.Booking.objects.filter(
+            scheduled_room=room_obj,
+            start_date__lte=a_date,
+            end_date__gte=a_date,
+        )
+
+        if existing_booking.exists():
+            return None
+
     # create a new booking
     new_booking = booking_models.Booking(
         start_date=start_date,
