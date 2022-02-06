@@ -23,8 +23,8 @@ def check_bookings_with_date_range(start, end):
             for scheduled_booking in room.scheduled_booking.all():
                 # check to see if our input range falls within the scheduled booking range
                 if (
-                    end <= scheduled_booking.start_date.date()
-                    or start >= scheduled_booking.end_date.date()
+                    end <= scheduled_booking.start_date
+                    or start >= scheduled_booking.end_date
                 ):
                     # it doesn't add it
                     result.append(room)
