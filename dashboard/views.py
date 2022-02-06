@@ -115,23 +115,13 @@ def booking_detail(request, pk):
 
 def check_in_user(request, pk):
     booking_data = get_object_or_404(booking_models.Booking, pk=pk)
-    room = booking_data.scheduled_room
 
-    if hasattr(room, "booking"):
-        messages.add_message(request, messages.ERROR, "This room is currently booked!")
-    else:
-        booking_data.room = room
-        booking_data.scheduled_room = None
-        booking_data.status = "checked_in"
-        booking_data.save()
-
-        booking_log = booking_models.BookingLog(
-            booking=booking_data, what="Customer was checked-in"
-        )
-        booking_log.save()
-
+    if booking_data.check_in():
         messages.add_message(request, messages.SUCCESS, "User checked in!")
-
+    else:
+        messages.add_message(
+            request, messages.ERROR, "There was a problem checking this user in"
+        )
     return redirect("dashboard-booking-detail", pk=pk)
 
 
