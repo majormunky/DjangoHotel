@@ -116,6 +116,7 @@ def booking_detail(request, pk):
 
 
 def ajax_book_room(request):
+    # TODO: Perform more server side checking to be sure no room is scheduled twice
     user_id = request.POST.get("user_id", None)
     room_list = request.POST.get("rooms")
     room_list = json.loads(room_list)
@@ -140,13 +141,11 @@ def ajax_book_room(request):
 
     floor_obj = floor_models.Floor.objects.get(number=room_parts[0])
 
-    print("Floor Obj:", floor_obj)
     room_num = room_parts[1]
-    print("room num", room_num, "done room num")
+
     room_obj = floor_models.Room.objects.get(
         number=room_parts[1].strip(), floor=floor_obj
     )
-    print(room_obj)
 
     new_booking = booking_models.Booking(
         start_date=start_date,
@@ -155,7 +154,6 @@ def ajax_book_room(request):
         scheduled_room=room_obj,
     )
     new_booking.save()
-    print(new_booking.id)
 
     new_url = reverse("dashboard-booking-detail", args=[new_booking.id])
 
